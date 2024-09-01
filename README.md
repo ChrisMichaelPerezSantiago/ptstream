@@ -7,6 +7,10 @@
 - [x] `Node.js >= 18.x`
 - [x] `Yarn >= 1.x`
 
+# UI
+<img width="884" alt="5" src="https://github.com/user-attachments/assets/9085c9be-2393-43fa-afc9-448c4e4732b1">
+
+
 ## 📦 Installation
 
 ```shell
