@@ -56,9 +56,9 @@ const StreamingVideo = ({ movie: { id }, onBack }: StreamingVideoProps) => {
     <div className="relative flex flex-col min-h-screen text-black dark:text-white">
       <button
         onClick={onBack}
-        className="absolute z-10 flex items-center justify-center w-8 h-8 p-1 text-white transition-colors bg-black rounded-full top-4 left-4 dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-300"
+        className="flex items-center justify-center w-8 h-8 p-1 text-black transition-colors border rounded-full bg-gray-200/30 backdrop-blur-md border-gray-200/50 dark:bg-gray-800/30 dark:text-white dark:border-gray-800/50 hover:bg-gray-200/40 dark:hover:bg-gray-800/40"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-4 h-4 text-black dark:text-white" />
       </button>
 
       {isLoading && (
