@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Badge, Button, Image } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -31,6 +31,7 @@ type DefaultStateProps = {
 type ChapterStateProps = {
   chapter: any;
   onWatchNow: () => void;
+  onBack: () => void;
 };
 
 type StreamingVideoProps = {
@@ -67,9 +68,9 @@ const StreamingVideo = ({
     <div className="flex flex-col min-h-screen text-black dark:text-white">
       <button
         onClick={onBack}
-        className="flex items-center justify-center w-8 h-8 p-1 text-white transition-colors bg-black rounded-full dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-300"
+        className="flex items-center justify-center w-8 h-8 p-1 text-black transition-colors border rounded-full bg-gray-200/30 backdrop-blur-md border-gray-200/50 dark:bg-gray-800/30 dark:text-white dark:border-gray-800/50 hover:bg-gray-200/40 dark:hover:bg-gray-800/40"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-4 h-4 text-black dark:text-white" />
       </button>
       <div className="flex items-center justify-center flex-grow">
         <div className="w-full max-w-4xl overflow-hidden rounded-lg shadow-lg aspect-video">
@@ -87,9 +88,16 @@ const StreamingVideo = ({
   );
 };
 
-const ChapterState = ({ chapter, onWatchNow }: ChapterStateProps) => {
+const ChapterState = ({ chapter, onWatchNow, onBack }: ChapterStateProps) => {
   return (
     <div className="text-black dark:text-white">
+      <button
+        onClick={onBack}
+        className="flex items-center justify-center w-8 h-8 p-1 text-black transition-colors border rounded-full bg-gray-200/30 backdrop-blur-md border-gray-200/50 dark:bg-gray-800/30 dark:text-white dark:border-gray-800/50 hover:bg-gray-200/40 dark:hover:bg-gray-800/40"
+      >
+        <ArrowLeft className="w-4 h-4 text-black dark:text-white" />
+      </button>
+
       <div className="container px-4 py-8">
         <div className="flex gap-8 lg:gap-16">
           {chapter.still_path ? (
@@ -261,6 +269,7 @@ const DefaultState = ({
 
 export const Section = ({ item }: SerieSectionProps) => {
   const [watchNow, setWatchNow] = useState(false);
+  const [backToSeason, setBackToSeason] = useState(false);
   const [serieId, setSerieId] = useState<number>();
   const [seasonId, setSeasonId] = useState<number>();
   const [episodeId, setEpisodeId] = useState<number>();
@@ -269,6 +278,10 @@ export const Section = ({ item }: SerieSectionProps) => {
 
   const handleBack = () => {
     setWatchNow(false);
+  };
+
+  const handleBackToSeason = () => {
+    setBackToSeason(true);
   };
 
   const { mutate: mutateChapter } = useGetChapterBySeasonId({
@@ -298,6 +311,22 @@ export const Section = ({ item }: SerieSectionProps) => {
     .find((episode) => episode && episode.episode_number === episodeId)
     .value();
 
+  const reset = () => {
+    setWatchNow(false);
+    setBackToSeason(false);
+    setChapter(null);
+    setEpisodeId(null);
+    setSeasonId(null);
+    setSerieId(null);
+  };
+
+  // reset state when back to season
+  useEffect(() => {
+    if (backToSeason) {
+      reset();
+    }
+  }, [backToSeason]);
+
   return (
     <div className="relative">
       <AnimatePresence>
@@ -324,7 +353,7 @@ export const Section = ({ item }: SerieSectionProps) => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            {!chapter ? (
+            {!chapter || backToSeason ? (
               <DefaultState
                 serie={serie}
                 onWatchNow={() => setWatchNow(true)}
@@ -336,6 +365,7 @@ export const Section = ({ item }: SerieSectionProps) => {
               <ChapterState
                 chapter={episode}
                 onWatchNow={() => setWatchNow(true)}
+                onBack={handleBackToSeason}
               />
             )}
           </motion.div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Film, LucideProps, Tv } from "lucide-react";
+import { FilmIcon, LucideProps, TvIcon } from "lucide-react";
 
 import { RootState } from "../../redux/store";
 import SerieScene from "../../components/scenes/Series";
@@ -17,11 +17,11 @@ type SceneProps = {
 const scenes: Record<Scene, SceneProps> = {
   series: {
     component: <SerieScene />,
-    icon: Tv,
+    icon: TvIcon,
   },
   movies: {
     component: <MovieScene />,
-    icon: Film,
+    icon: FilmIcon,
   },
 };
 
