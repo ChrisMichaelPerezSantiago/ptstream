@@ -11,6 +11,7 @@ const config: ForgeConfig = {
   packagerConfig: {
     name: 'ptstream',
     asar: true,
+    osxSign: {}
   },
   rebuildConfig: {},
   makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
