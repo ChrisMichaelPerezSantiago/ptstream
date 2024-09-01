@@ -6,10 +6,9 @@ import {
   BrowserRouter as Router,
   Routes,
   useLocation,
-  useNavigate,
 } from "react-router-dom";
 import { createRoot } from "react-dom/client";
-import { Button, NextUIProvider, Switch } from "@nextui-org/react";
+import { NextUIProvider, Switch } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 import { Film, Sun, Tv, Moon, LucideProps } from "lucide-react";
 
@@ -19,6 +18,7 @@ import { setScene } from "./redux/scenes/sceneSlice";
 import SerieScene from "./components/scenes/Series";
 import MovieScene from "./components/scenes/Movies";
 import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AppDispatch, RootState, store } from "./redux/store";
 import { Scene } from "./types";
@@ -100,6 +100,7 @@ function App() {
           <Route path="/search" element={<Search />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 }
