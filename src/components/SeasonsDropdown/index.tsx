@@ -7,7 +7,7 @@ import {
   Button,
   User,
 } from "@nextui-org/react";
-import { get, map } from "lodash";
+import { chain, get, map } from "lodash";
 
 import useGetSeasonById from "../../hooks/useGetSeasonById";
 import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
@@ -29,7 +29,10 @@ export default function SeriesDropdown({
 
   const { mutate: mutateSeasons } = useGetSeasonById({
     onSuccess: (data: SerieSeasonsResult) => {
-      setSeasons(get(data, "seasons", []));
+      const listOfSeasons = chain(get(data, "seasons", []))
+        .filter((season) => season.name !== "Specials") // remove specials season
+        .value();
+      setSeasons(listOfSeasons);
     },
     onError: (error: Error) => {
       console.error("Error fetching season by id:", error);
@@ -84,7 +87,7 @@ export default function SeriesDropdown({
                   }}
                 />
               }
-              onClick={() => handleSeasonSelect(season, index)} // index + 1  equal season
+              onClick={() => handleSeasonSelect(season, index + 1)} // index + 1  equal season
             >
               {season.name}
             </DropdownItem>
