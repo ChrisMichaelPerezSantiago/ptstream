@@ -2,9 +2,18 @@
 
 > ptstream is a straightforward streaming application designed for seamless viewing of movies and TV series. With its intuitive and user-friendly interface, you can effortlessly browse and enjoy your favorite content. 🚀
 
+## Prerequisites
+
+- [x] `Node.js >= 18.x`
+- [x] `Yarn >= 1.x`
+
 ## 📦 Installation
 
-...
+```shell
+npm run start
+# or
+yarn start
+```
 
 # 📚 Documentation
 
