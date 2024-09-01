@@ -10,7 +10,7 @@ import {
 import { createRoot } from "react-dom/client";
 import { NextUIProvider, Switch } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
-import { Film, Sun, Tv, Moon, LucideProps } from "lucide-react";
+import { FilmIcon, SunIcon, TvIcon, MoonIcon, LucideProps } from "lucide-react";
 
 import Root from "./scenes/root";
 import Search from "./components/scenes/Search";
@@ -37,11 +37,11 @@ type SceneProps = {
 const scenes: Record<Scene, SceneProps> = {
   series: {
     component: <SerieScene />,
-    icon: Tv,
+    icon: TvIcon,
   },
   movies: {
     component: <MovieScene />,
-    icon: Film,
+    icon: FilmIcon,
   },
 };
 
@@ -86,9 +86,9 @@ function App() {
             onChange={(e) => setTheme(e.target.checked ? "dark" : "light")} // Switch to dark mode if toggled
             thumbIcon={({ isSelected, className }) =>
               isSelected ? (
-                <Sun className={className} /> // Show Sun icon when light mode is selected
+                <SunIcon className={className} /> // Show Sun icon when light mode is selected
               ) : (
-                <Moon className={className} /> // Show Moon icon when dark mode is selected
+                <MoonIcon className={className} /> // Show Moon icon when dark mode is selected
               )
             }
           />
