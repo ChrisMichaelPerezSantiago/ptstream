@@ -12,6 +12,8 @@ const createWindow = () => {
     width: 900,
     height: 620,
     resizable: false,
+    autoHideMenuBar: true,
+    center: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true, // If using Node.js features in the renderer
