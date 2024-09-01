@@ -9,6 +9,7 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses';
 
 const config: ForgeConfig = {
   packagerConfig: {
+    name: 'ptstream',
     asar: true,
   },
   rebuildConfig: {},
@@ -55,7 +56,9 @@ const config: ForgeConfig = {
           owner: 'ChrisMichaelPerezSantiago',
           name: 'ptstream'
         },
-        prerelease: true
+        draft: true,
+        prerelease: false,
+        generateReleaseNotes: true
       }
     }
   ]
