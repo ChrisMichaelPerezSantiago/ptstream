@@ -1,18 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { FilmIcon, LucideProps, TvIcon } from "lucide-react";
 
 import { RootState } from "../../redux/store";
 import SerieScene from "../../components/scenes/Series";
 import MovieScene from "../../components/scenes/Movies";
-import { Scene } from "../../types";
-
-type SceneProps = {
-  component: JSX.Element;
-  icon: React.ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
-  >;
-};
+import { Scene, SceneProps } from "../../types";
+import MovieIcon from "../../components/Icons/MovieIcon";
+import TvIcon from "../../components/Icons/TvIcon";
 
 const scenes: Record<Scene, SceneProps> = {
   series: {
@@ -21,7 +15,7 @@ const scenes: Record<Scene, SceneProps> = {
   },
   movies: {
     component: <MovieScene />,
-    icon: FilmIcon,
+    icon: MovieIcon,
   },
 };
 

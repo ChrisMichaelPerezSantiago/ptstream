@@ -27,7 +27,7 @@ export default function NavBar() {
       <Tabs
         selectedKey={selected}
         onSelectionChange={handleSelectionChange}
-        color="primary"
+        color="default"
         variant="bordered"
       >
         {Object.entries(NAVIGATION_MAP).map(([key, path]) => (
