@@ -17,6 +17,7 @@ export function Footer() {
         ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full"
         }
+        z-50 // Ensure the footer is above other content
       `}
     >
       <div className="container flex items-center justify-between mx-auto">
