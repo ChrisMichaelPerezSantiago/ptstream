@@ -1,29 +1,8 @@
-import { Key, useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Button,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  User,
-  Selection,
-  SortDescriptor,
-  Spinner,
-} from "@nextui-org/react";
-import { truncate } from "lodash";
-import { PlayCircle } from "lucide-react";
+import { useCallback, useEffect, useMemo } from "react";
+import { Button, Spinner, Image } from "@nextui-org/react";
+import { map, size, truncate } from "lodash";
 
-import { VerticalDotsIcon } from "../Icons/VerticalDotsIcon";
-import * as TableUtils from "../../toolkit/table";
 import { SerieResult, UniqueSerie } from "../../types";
-
-const INITIAL_VISIBLE_COLUMNS = ["name", "actions"];
 
 type TableContainerProps = {
   rows: SerieResult;
@@ -44,73 +23,40 @@ export const TableContainer = ({
   emptyContentLabel,
   isLoading,
 }: TableContainerProps) => {
-  const [visibleColumns, _] = useState<Selection>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: "title",
-    direction: "ascending",
-  });
-
   const hasMore = page < totalRecords;
 
-  type Row = typeof rows[0];
-
-  const headerColumns = useMemo(() => {
-    return TableUtils.serieColumns.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid)
-    );
-  }, [visibleColumns]);
-
-  const renderCell = useCallback((row: Row, columnKey: Key) => {
-    const cellValue = row[columnKey as keyof Row];
-
-    switch (columnKey) {
-      case "name":
-        return (
-          <User
-            avatarProps={{
-              radius: "lg",
-              src: `https://image.tmdb.org/t/p/w185${row.poster_path}`,
-            }}
-            description={truncate(row.overview, {
-              length: 90,
-              omission: "...",
-            })}
-            name={cellValue}
-          >
-            {row.first_air_date}
-          </User>
-        );
-
-      case "actions":
-        return (
-          <div className="relative flex items-center justify-end gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-300" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem
-                  startContent={<PlayCircle className="w-4 h-4" />}
-                  onClick={() => handleOpenModal(row)}
-                >
-                  Watch
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+  const renderUserCard = useCallback(
+    (row: UniqueSerie) => {
+      return (
+        <div
+          className="flex items-start p-4 transition-colors cursor-pointer hover:bg-gray-100"
+          onClick={() => handleOpenModal(row)}
+        >
+          <Image
+            alt={row.name}
+            className="object-cover rounded-lg"
+            height={120}
+            width={80}
+            src={`https://image.tmdb.org/t/p/w185${row.poster_path}`}
+          />
+          <div className="flex-1 ml-4">
+            <p className="font-semibold text-gray-800 text-md">{row.name}</p>
+            <p className="mt-1 text-sm text-gray-500">
+              {truncate(row.overview, {
+                length: 50,
+                omission: "...",
+              })}
+            </p>
           </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+        </div>
+      );
+    },
+    [handleOpenModal]
+  );
 
   const bottomContent = useMemo(() => {
     return hasMore && !isLoading ? (
-      <div className="flex justify-center w-full">
+      <div className="flex justify-center w-full mt-4">
         <Button
           isDisabled={isLoading}
           variant="flat"
@@ -121,7 +67,32 @@ export const TableContainer = ({
         </Button>
       </div>
     ) : null;
-  }, [rows.length, page, totalRecords]);
+  }, [isLoading, page, totalRecords, watchPage]);
+
+  // Scroll event listener
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollableHeight = document.documentElement.scrollHeight;
+      const scrolled = window.innerHeight + window.scrollY;
+
+      if (scrolled >= scrollableHeight - 100 && hasMore && !isLoading) {
+        watchPage(page + 1);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [hasMore, isLoading, page, watchPage]);
+
+  const DataState = () =>
+    map(rows, (row) => <div key={row.id}>{renderUserCard(row)}</div>);
+
+  const EmptyState = () => (
+    <div className="flex justify-center w-full">{emptyContentLabel}</div>
+  );
 
   // track page value changes
   useEffect(() => {
@@ -129,42 +100,12 @@ export const TableContainer = ({
   }, [page]);
 
   return (
-    <Table
-      isHeaderSticky
-      bottomContent={bottomContent}
-      bottomContentPlacement="inside"
-      classNames={{
-        wrapper: "max-h-[420px]",
-      }}
-      sortDescriptor={sortDescriptor}
-      topContentPlacement="outside"
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody
-        isLoading={isLoading}
-        items={rows}
-        loadingContent={<Spinner color="default" />}
-        emptyContent={emptyContentLabel}
-      >
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {isLoading && <Spinner color="default" size="sm" />}
+        {size(rows) > 0 ? <DataState /> : <EmptyState />}
+      </div>
+      {bottomContent}
+    </div>
   );
 };

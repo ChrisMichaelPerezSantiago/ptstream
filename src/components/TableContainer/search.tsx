@@ -1,31 +1,9 @@
-import { Key, useCallback, useMemo, useState } from "react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Input,
-  Button,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  User,
-  Selection,
-  SortDescriptor,
-  Spinner,
-} from "@nextui-org/react";
-import { truncate } from "lodash";
-import { PlayCircle } from "lucide-react";
+import { useCallback, useMemo } from "react";
+import { Spinner, Image, Input } from "@nextui-org/react";
+import { get, map, size, truncate } from "lodash";
 
-import { VerticalDotsIcon } from "../Icons/VerticalDotsIcon";
-import { SearchIcon } from "../Icons/SearchIcon";
-import * as TableUtils from "../../toolkit/table";
 import { SerieResult, UniqueSerie } from "../../types";
-
-const INITIAL_VISIBLE_COLUMNS = ["name", "actions"];
+import { SearchIcon } from "../Icons/SearchIcon";
 
 type TableContainerProps = {
   rows: SerieResult;
@@ -33,7 +11,7 @@ type TableContainerProps = {
   page: number;
   handleOpenModal: (recordSelected: UniqueSerie) => void;
   watchInputSearch: (query: string) => void;
-  emptyContentLabel: string;
+  emptyContentLabel: JSX.Element;
   isLoading?: boolean;
 };
 
@@ -44,67 +22,36 @@ export const TableContainer = ({
   emptyContentLabel,
   isLoading,
 }: TableContainerProps) => {
-  const [visibleColumns, _] = useState<Selection>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: "title",
-    direction: "ascending",
-  });
-
-  type Row = typeof rows[0];
-
-  const headerColumns = useMemo(() => {
-    return TableUtils.serieColumns.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid)
-    );
-  }, [visibleColumns]);
-
-  const renderCell = useCallback((row: Row, columnKey: Key) => {
-    const cellValue = row[columnKey as keyof Row];
-
-    switch (columnKey) {
-      case "name":
-        return (
-          <User
-            avatarProps={{
-              radius: "lg",
-              src: `https://image.tmdb.org/t/p/w185${row.poster_path}`,
-            }}
-            description={truncate(row.overview, {
-              length: 90,
-              omission: "...",
-            })}
-            name={cellValue}
-          >
-            {row.first_air_date}
-          </User>
-        );
-
-      case "actions":
-        return (
-          <div className="relative flex items-center justify-end gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-300" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem
-                  startContent={<PlayCircle className="w-4 h-4" />}
-                  onClick={() => handleOpenModal(row)}
-                >
-                  Watch
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+  const renderUserCard = useCallback(
+    (row: UniqueSerie) => {
+      return (
+        <div
+          className="flex items-start p-4 transition-colors cursor-pointer hover:bg-gray-100"
+          onClick={() => handleOpenModal(row)}
+        >
+          <Image
+            alt={get(row, "name", null) || get(row, "title", null)}
+            className="object-cover rounded-lg"
+            height={120}
+            width={80}
+            src={`https://image.tmdb.org/t/p/w185${get(row, "poster_path")}`}
+          />
+          <div className="flex-1 ml-4">
+            <p className="font-semibold text-gray-800 text-md">
+              {get(row, "name", null) || get(row, "title", null)}
+            </p>
+            <p className="mt-1 text-sm text-gray-500">
+              {truncate(get(row, "overview", null), {
+                length: 50,
+                omission: "...",
+              })}
+            </p>
           </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+        </div>
+      );
+    },
+    [handleOpenModal]
+  );
 
   const topContent = useMemo(() => {
     return (
@@ -120,45 +67,35 @@ export const TableContainer = ({
         </div>
       </div>
     );
-  }, [visibleColumns, watchInputSearch, rows.length]);
+  }, [watchInputSearch]);
+
+  const DataState = () => (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {map(rows, (row) => (
+        <div key={row.id}>{renderUserCard(row)}</div>
+      ))}
+    </div>
+  );
+
+  const EmptyState = () => (
+    <div className="flex justify-center w-full">{emptyContentLabel}</div>
+  );
+
+  const LoadingState = () => (
+    <div className="flex justify-center w-full mt-20">
+      <Spinner color="default" size="sm" />
+    </div>
+  );
+
+  const mainClass = size(rows) > 0 ? "mt-4" : "mt-20";
 
   return (
-    <Table
-      isHeaderSticky
-      bottomContentPlacement="inside"
-      classNames={{
-        wrapper: "max-h-[382px]",
-      }}
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody
-        isLoading={isLoading}
-        items={rows}
-        loadingContent={<Spinner color="default" />}
-        emptyContent={emptyContentLabel}
-      >
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <div>
+      {topContent}
+      {isLoading && <LoadingState />}
+      <div className={mainClass}>
+        {size(rows) > 0 ? <DataState /> : <EmptyState />}
+      </div>
+    </div>
   );
 };
