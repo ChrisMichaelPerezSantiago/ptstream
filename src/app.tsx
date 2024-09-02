@@ -10,7 +10,7 @@ import {
 import { createRoot } from "react-dom/client";
 import { NextUIProvider, Switch } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
-import { FilmIcon, SunIcon, TvIcon, MoonIcon, LucideProps } from "lucide-react";
+import { FilmIcon, TvIcon, LucideProps } from "lucide-react";
 
 import Root from "./scenes/root";
 import Search from "./components/scenes/Search";
@@ -46,7 +46,7 @@ const scenes: Record<Scene, SceneProps> = {
 };
 
 function App() {
-  const { setTheme, resolvedTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -79,7 +79,7 @@ function App() {
               thumbIcon={({ className }) => <SceneIcon className={className} />}
             />
           ) : null}
-          <Switch
+          {/* <Switch
             checked={resolvedTheme === "light"} // Show light mode selected by default
             size="md"
             color="primary"
@@ -91,7 +91,7 @@ function App() {
                 <MoonIcon className={className} /> // Show Moon icon when dark mode is selected
               )
             }
-          />
+          /> */}
         </div>
       </header>
       <main className="p-4">
