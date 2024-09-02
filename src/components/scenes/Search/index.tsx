@@ -1,5 +1,6 @@
 import { useState, useCallback, Fragment } from "react";
 import { Chip, useDisclosure } from "@nextui-org/react";
+import { debounce } from "lodash";
 
 import useSearch from "../../../hooks/useSearch";
 import { SearchTableContainer } from "../../TableContainer";
@@ -59,15 +60,15 @@ export default function SerieScene() {
   };
 
   const watchInputSearch = useCallback(
-    (query: string) => {
-      if (!query.trim()) {
+    debounce((searchQuery: string) => {
+      if (!searchQuery.trim()) {
         setRecords([]);
         setPage(1);
         setTotalRecords(0);
         return;
       }
-      mutateSearch({ q: query });
-    },
+      mutateSearch({ q: searchQuery });
+    }, 500),
     [mutateSearch]
   );
 
