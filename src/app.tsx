@@ -107,21 +107,19 @@ function App() {
 
 const root = createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <NextUIProvider>
-      <QueryClientProvider client={queryClient}>
-        <NextThemesProvider attribute="class" defaultTheme="light">
-          <Provider store={store}>
-            <LanguageProvider>
-              <Router>
-                <div className="px-2 mx-1 sm:mx-2 lg:mx-4">
-                  <App />
-                </div>
-              </Router>
-            </LanguageProvider>
-          </Provider>
-        </NextThemesProvider>
-      </QueryClientProvider>
-    </NextUIProvider>
-  </React.StrictMode>
+  <NextUIProvider>
+    <QueryClientProvider client={queryClient}>
+      <NextThemesProvider attribute="class" defaultTheme="light">
+        <Provider store={store}>
+          <LanguageProvider>
+            <Router>
+              <div className="px-2 mx-1 sm:mx-2 lg:mx-4">
+                <App />
+              </div>
+            </Router>
+          </LanguageProvider>
+        </Provider>
+      </NextThemesProvider>
+    </QueryClientProvider>
+  </NextUIProvider>
 );
