@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ComponentType, SVGProps } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import {
@@ -10,9 +10,10 @@ import {
 import { createRoot } from "react-dom/client";
 import { NextUIProvider, Switch } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
-import { FilmIcon, TvIcon, LucideProps } from "lucide-react";
 
 import Root from "./scenes/root";
+import TvIcon from "./components/Icons/TvIcon";
+import MovieIcon from "./components/Icons/MovieIcon";
 import Search from "./components/scenes/Search";
 import { setScene } from "./redux/scenes/sceneSlice";
 import SerieScene from "./components/scenes/Series";
@@ -21,18 +22,11 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AppDispatch, RootState, store } from "./redux/store";
-import { Scene } from "./types";
+import { Scene, SceneProps } from "./types";
 
 import "./index.css";
 
 const queryClient = new QueryClient();
-
-type SceneProps = {
-  component: JSX.Element;
-  icon: React.ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
-  >;
-};
 
 const scenes: Record<Scene, SceneProps> = {
   series: {
@@ -41,7 +35,7 @@ const scenes: Record<Scene, SceneProps> = {
   },
   movies: {
     component: <MovieScene />,
-    icon: FilmIcon,
+    icon: MovieIcon,
   },
 };
 
@@ -72,7 +66,7 @@ function App() {
             <Switch
               defaultChecked={currentScene === "series"}
               size="md"
-              color="primary"
+              color="default"
               onChange={(e) =>
                 switchScene(e.target.checked ? "movies" : "series")
               }

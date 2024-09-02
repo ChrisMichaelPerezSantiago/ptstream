@@ -1,8 +1,13 @@
 import { Schema } from "@effect/schema";
-import { SVGProps } from "react";
+import { ComponentType, SVGProps } from "react";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
+};
+
+export type SceneProps = {
+  component: JSX.Element;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
 
 export type Scene = "series" | "movies";
