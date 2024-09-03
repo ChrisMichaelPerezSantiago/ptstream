@@ -87,7 +87,16 @@ const StreamingVideo = ({ movie: { id }, onBack }: StreamingVideoProps) => {
 
 const DefaultState = ({ movie, onWatchNow }: DefaultStateProps) => {
   return (
-    <div className="text-black dark:text-white">
+    <div className="max-h-screen overflow-y-auto text-black dark:text-white">
+      <div className="relative h-[400px] overflow-hidden rounded-[1rem] mx-4 mt-4">
+        <Image
+          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+          alt={`${movie.title} backdrop`}
+          className="brightness-30"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+      </div>
+
       <div className="container px-4 py-8">
         <div className="flex gap-8 lg:gap-16">
           {movie.poster_path ? (

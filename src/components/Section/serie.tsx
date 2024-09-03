@@ -176,7 +176,16 @@ const DefaultState = ({
   watchChapter,
 }: DefaultStateProps) => {
   return (
-    <div className="text-black dark:text-white">
+    <div className="max-h-screen overflow-y-auto text-black dark:text-white">
+      <div className="relative h-[400px] overflow-hidden rounded-[1rem] mx-4 mt-4">
+        <Image
+          src={`https://image.tmdb.org/t/p/original${serie.backdrop_path}`}
+          alt={`${serie.name} backdrop`}
+          className="brightness-30"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+      </div>
+
       <div className="container px-4 py-8">
         <div className="flex gap-8 lg:gap-16">
           {serie.poster_path ? (
