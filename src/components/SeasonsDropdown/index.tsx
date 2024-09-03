@@ -7,11 +7,13 @@ import {
   Button,
   User,
 } from "@nextui-org/react";
-import { chain, get, map } from "lodash";
+import { chain, get, map, size } from "lodash";
 
 import useGetSeasonById from "../../hooks/useGetSeasonById";
 import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
 import { Seasons, SerieSeasonsResult, UniqueSerieSeason } from "../../types";
+import useGetChapterBySeasonId from "../../hooks/useGetChapterBySeasonId";
+import { parseDate } from "../../toolkit/serie";
 
 type SeriesDropdownProps = {
   id: number;
@@ -23,6 +25,7 @@ export default function SeriesDropdown({
   watchChapter,
 }: SeriesDropdownProps) {
   const [seasons, setSeasons] = useState<Seasons>([]);
+  const [chapters, setChapters] = useState<any>(null);
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState<number>();
   const [selectedSeason, setSelectedSeason] = useState<UniqueSerieSeason>(null);
   const [selectedChapterNumber, setSelectedChapterNumber] = useState<number>();
@@ -39,10 +42,28 @@ export default function SeriesDropdown({
     },
   });
 
+  const { mutate: mutateChapter } = useGetChapterBySeasonId({
+    onSuccess: (data: any) => {
+      setChapters(data);
+    },
+    onError: (error: Error) => {
+      console.error("Error fetching chapter by season id:", error);
+    },
+  });
+
   // call mutation as soon selecting a serie
   useEffect(() => {
     mutateSeasons(id);
   }, [id, mutateSeasons]);
+
+  useEffect(() => {
+    if (selectedSeason) {
+      mutateChapter({
+        serieId: id,
+        seasonId: selectedSeasonIndex,
+      });
+    }
+  }, [selectedSeason, selectedSeasonIndex, mutateChapter]);
 
   // watch chapter when selecting a season in the serie (default state)
   // pass seasonId and chapterId to watchChapter
@@ -108,15 +129,29 @@ export default function SeriesDropdown({
           <DropdownMenu variant="faded" className="overflow-y-auto max-h-60">
             {map(
               Array.from(
-                { length: selectedSeason.episode_count },
+                { length: size(get(chapters, "episodes")) },
                 (_, i) => i + 1
               ),
               (chapter) => (
                 <DropdownItem
                   key={chapter}
+                  description={`${parseDate(
+                    get(chapters, "episodes")[chapter - 1].air_date
+                  )}`}
+                  startContent={
+                    <User
+                      avatarProps={{
+                        radius: "lg",
+                        src: `https://image.tmdb.org/t/p/w185${
+                          get(chapters, "episodes")[chapter - 1].still_path
+                        }`,
+                        title: get(chapters, "episodes")[chapter - 1].name,
+                      }}
+                    />
+                  }
                   onClick={() => handleChapterSelect(chapter)}
                 >
-                  {chapter}
+                  {get(chapters, "episodes")[chapter - 1].name}
                 </DropdownItem>
               )
             )}
