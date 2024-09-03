@@ -5,7 +5,7 @@ import HttpClientService from "./HttpClientService";
 import { MovieFilter } from "src/types";
 
 export default {
-  all: (props: MovieFilter) => {
+  all: (props: MovieFilter & { with_genres?: number }) => {
     const query: MovieFilter = {
       sort_by: "popularity.desc",
       api_key: "a0a7e40dc8162ed7e37aa2fc97db5654",

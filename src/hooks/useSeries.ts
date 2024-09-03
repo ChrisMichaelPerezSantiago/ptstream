@@ -5,13 +5,15 @@ import { SerieFilter } from "../types";
 
 const { all } = SerieService;
 
+type Props = SerieFilter & { with_genres?: number };
+
 const useSeries = (
   values: any
-): UseMutationResult<ReturnType<typeof all>, unknown, SerieFilter> => {
+): UseMutationResult<ReturnType<typeof all>, unknown, Props> => {
   return useMutation({
     mutationKey: ["UseAllSeries"],
-    mutationFn: async ({ page }) => {
-      return all({ page });
+    mutationFn: async ({ page, with_genres }) => {
+      return all({ page, with_genres });
     },
     ...values,
   });
