@@ -30,6 +30,7 @@ type DefaultStateProps = {
 
 type ChapterStateProps = {
   chapter: any;
+  serie: UniqueSerie;
   onWatchNow: () => void;
   onBack: () => void;
 };
@@ -88,15 +89,29 @@ const StreamingVideo = ({
   );
 };
 
-const ChapterState = ({ chapter, onWatchNow, onBack }: ChapterStateProps) => {
+const ChapterState = ({
+  chapter,
+  serie,
+  onWatchNow,
+  onBack,
+}: ChapterStateProps) => {
   return (
-    <div className="text-black dark:text-white">
+    <div className="max-h-screen overflow-y-auto text-black dark:text-white">
       <button
         onClick={onBack}
         className="flex items-center justify-center w-8 h-8 p-1 text-black transition-colors border rounded-full bg-gray-200/30 backdrop-blur-md border-gray-200/50 dark:bg-gray-800/30 dark:text-white dark:border-gray-800/50 hover:bg-gray-200/40 dark:hover:bg-gray-800/40"
       >
         <ArrowLeft className="w-4 h-4 text-black dark:text-white" />
       </button>
+
+      <div className="relative h-[400px] overflow-hidden rounded-[1rem] mx-4 mt-4">
+        <Image
+          src={`https://image.tmdb.org/t/p/original${serie.backdrop_path}`}
+          alt={`${chapter.name} backdrop`}
+          className="brightness-30"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+      </div>
 
       <div className="container px-4 py-8">
         <div className="flex gap-8 lg:gap-16">
@@ -373,6 +388,7 @@ export const Section = ({ item }: SerieSectionProps) => {
             ) : (
               <ChapterState
                 chapter={episode}
+                serie={serie}
                 onWatchNow={() => setWatchNow(true)}
                 onBack={handleBackToSeason}
               />
