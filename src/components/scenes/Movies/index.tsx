@@ -40,18 +40,19 @@ export default function MovieScene() {
     },
   });
 
-  const buildPayload = useCallback(() => {
-    let payload = { page };
-    if (currentGenre > 0) {
-      set(payload, "with_genres", currentGenre);
-    }
-    return payload;
-  }, [page, currentGenre]);
-
   const reset = () => {
     setMovies([]);
     setPage(1);
   };
+
+  const buildPayload = useCallback(() => {
+    let payload = { page };
+    if (currentGenre > 0) {
+      reset();
+      set(payload, "with_genres", currentGenre);
+    }
+    return payload;
+  }, [page, currentGenre]);
 
   useEffect(() => {
     if (currentGenre > 0 || page > 0) {
