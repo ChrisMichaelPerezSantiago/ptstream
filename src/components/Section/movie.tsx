@@ -13,6 +13,7 @@ import { map, range, toUpper } from "lodash";
 
 import { UniqueMovie } from "../../types";
 import { moviesGenres } from "../../constants";
+import { parseDate } from "../../toolkit/serie";
 
 type MovieSectionProps = {
   item: UniqueMovie;
@@ -158,7 +159,7 @@ const DefaultState = ({ movie, onWatchNow }: DefaultStateProps) => {
               {movie.release_date && (
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  Release Date: {movie.release_date}
+                  Release Date: {parseDate(movie.release_date)}
                 </div>
               )}
               {movie.original_language && (

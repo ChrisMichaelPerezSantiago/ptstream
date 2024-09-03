@@ -16,7 +16,7 @@ import { UniqueSerie } from "../../types";
 import { tvSeriesGenres } from "../../constants";
 import SeriesDropdown from "../../components/SeasonsDropdown";
 import useGetChapterBySeasonId from "../../hooks/useGetChapterBySeasonId";
-import { formatRuntime } from "../../toolkit/serie";
+import { formatRuntime, parseDate } from "../../toolkit/serie";
 
 type SerieSectionProps = {
   item: UniqueSerie;
@@ -168,7 +168,7 @@ const ChapterState = ({
               {chapter.air_date && (
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  Air Date: {chapter.air_date}
+                  Air Date: {parseDate(chapter.air_date)}
                 </div>
               )}
               {chapter.runtime && (
@@ -263,7 +263,7 @@ const DefaultState = ({
               {serie.first_air_date && (
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  First Air Date: {serie.first_air_date}
+                  First Air Date: {parseDate(serie.first_air_date)}
                 </div>
               )}
               {serie.original_language && (
