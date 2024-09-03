@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
 
 import sceneReducer from './scenes/sceneSlice';
+import genreReducer from './genre/genreSlice';
 
 const logger = createLogger({
   collapsed: true,
@@ -12,6 +13,8 @@ const logger = createLogger({
 export const store = configureStore({
   reducer: {
     scene: sceneReducer,
+    genre: genreReducer,
+
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });

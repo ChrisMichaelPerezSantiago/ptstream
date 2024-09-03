@@ -1,4 +1,3 @@
-import React, { ComponentType, SVGProps } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import {
@@ -20,9 +19,11 @@ import SerieScene from "./components/scenes/Series";
 import MovieScene from "./components/scenes/Movies";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
+import GenreSelector from "./components/GenreSelector";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AppDispatch, RootState, store } from "./redux/store";
 import { Scene, SceneProps } from "./types";
+import { setGenre } from "./redux/genre/genreSlice";
 
 import "./index.css";
 
@@ -47,8 +48,17 @@ function App() {
   const currentScene = useSelector(
     (state: RootState) => state.scene.currentScene
   );
+  const selectedGenre = useSelector(
+    (state: RootState) => state.genre.selectedGenre
+  );
+
+  const reset = () => {
+    dispatch(setGenre(null));
+  };
+
   const SceneIcon = scenes[currentScene].icon;
   const switchScene = (scene: Scene) => dispatch(setScene(scene));
+  const handleGenreChange = (genre: number | null) => dispatch(setGenre(genre));
 
   return (
     <div
@@ -67,10 +77,17 @@ function App() {
               defaultChecked={currentScene === "series"}
               size="md"
               color="default"
-              onChange={(e) =>
-                switchScene(e.target.checked ? "movies" : "series")
-              }
+              onChange={(e) => {
+                switchScene(e.target.checked ? "movies" : "series");
+                reset();
+              }}
               thumbIcon={({ className }) => <SceneIcon className={className} />}
+            />
+          ) : null}
+          {location.pathname !== "/search" ? (
+            <GenreSelector
+              selectedGenre={selectedGenre}
+              onGenreChange={handleGenreChange}
             />
           ) : null}
           {/* <Switch
