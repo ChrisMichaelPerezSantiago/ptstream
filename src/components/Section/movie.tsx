@@ -14,6 +14,7 @@ import { map, range, toUpper } from "lodash";
 import { UniqueMovie } from "../../types";
 import { moviesGenres } from "../../constants";
 import { parseDate } from "../../toolkit/serie";
+import Banner from "../Banner";
 
 type MovieSectionProps = {
   item: UniqueMovie;
@@ -46,7 +47,10 @@ const getGenreName = (id: number) => {
   return moviesGenres[id] || "Unknown";
 };
 
-const StreamingVideo = ({ movie: { id }, onBack }: StreamingVideoProps) => {
+const StreamingVideo = ({
+  movie: { id, title, backdrop_path },
+  onBack,
+}: StreamingVideoProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleIframeLoad = () => {
@@ -54,7 +58,7 @@ const StreamingVideo = ({ movie: { id }, onBack }: StreamingVideoProps) => {
   };
 
   return (
-    <div className="relative flex flex-col min-h-screen text-black dark:text-white">
+    <div className="flex flex-col min-h-screen text-black dark:text-white">
       <button
         onClick={onBack}
         className="flex items-center justify-center w-8 h-8 p-1 text-black transition-colors border rounded-full bg-gray-200/30 backdrop-blur-md border-gray-200/50 dark:bg-gray-800/30 dark:text-white dark:border-gray-800/50 hover:bg-gray-200/40 dark:hover:bg-gray-800/40"
@@ -68,19 +72,27 @@ const StreamingVideo = ({ movie: { id }, onBack }: StreamingVideoProps) => {
         </div>
       )}
 
-      <div className="flex items-center justify-center flex-grow">
-        <div className="w-full h-full overflow-hidden rounded-lg shadow-lg aspect-video">
-          <iframe
-            src={`https://vidsrc.pro/embed/movie/${id}`}
-            width="100%"
-            height="100%"
-            allowFullScreen
-            allow="autoplay; fullscreen"
-            onLoad={handleIframeLoad}
-            className="w-full h-full"
-            style={{ borderRadius: 10, border: "none" }}
-          />
-        </div>
+      {backdrop_path ? (
+        <Banner
+          srcImg={backdrop_path}
+          alt={title}
+          style={{
+            height: 200,
+            margin: 0,
+            marginTop: 20,
+          }}
+        />
+      ) : null}
+
+      <div className="container py-8">
+        <iframe
+          src={`https://vidsrc.pro/embed/movie/${id}`}
+          className="absolute w-full border-0 rounded-lg shadow-lg h-96"
+          allowFullScreen
+          allow="autoplay; fullscreen"
+          frameBorder="0"
+          onLoad={handleIframeLoad}
+        />
       </div>
     </div>
   );
@@ -89,14 +101,9 @@ const StreamingVideo = ({ movie: { id }, onBack }: StreamingVideoProps) => {
 const DefaultState = ({ movie, onWatchNow }: DefaultStateProps) => {
   return (
     <div className="max-h-screen overflow-y-auto text-black dark:text-white">
-      <div className="relative h-[400px] overflow-hidden rounded-[1rem] mx-4 mt-4">
-        <Image
-          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-          alt={`${movie.title} backdrop`}
-          className="brightness-30"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
-      </div>
+      {movie.backdrop_path ? (
+        <Banner srcImg={movie.backdrop_path} alt={movie.title} />
+      ) : null}
 
       <div className="container px-4 py-8">
         <div className="flex gap-8 lg:gap-16">

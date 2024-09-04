@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Badge, Button, Image } from "@nextui-org/react";
+import { Badge, Button, Image, Spinner } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   PlayCircle,
@@ -17,6 +17,7 @@ import { tvSeriesGenres } from "../../constants";
 import SeriesDropdown from "../../components/SeasonsDropdown";
 import useGetChapterBySeasonId from "../../hooks/useGetChapterBySeasonId";
 import { formatRuntime, parseDate } from "../../toolkit/serie";
+import Banner from "../Banner";
 
 type SerieSectionProps = {
   item: UniqueSerie;
@@ -36,6 +37,7 @@ type ChapterStateProps = {
 };
 
 type StreamingVideoProps = {
+  serie: UniqueSerie;
   serieId: number;
   seasonId: number;
   episodeId: number;
@@ -60,11 +62,18 @@ const getGenreName = (id: number) => {
 };
 
 const StreamingVideo = ({
+  serie,
   serieId,
   seasonId,
   episodeId,
   onBack,
 }: StreamingVideoProps) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleIframeLoad = () => {
+    setIsLoading(false);
+  };
+
   return (
     <div className="flex flex-col min-h-screen text-black dark:text-white">
       <button
@@ -73,17 +82,34 @@ const StreamingVideo = ({
       >
         <ArrowLeft className="w-4 h-4 text-black dark:text-white" />
       </button>
-      <div className="flex items-center justify-center flex-grow">
-        <div className="w-full max-w-4xl overflow-hidden rounded-lg shadow-lg aspect-video">
-          <iframe
-            src={`https://vidsrc.pro/embed/tv/${serieId}/${seasonId}/${episodeId}`}
-            width="100%"
-            height="100%"
-            allowFullScreen
-            allow="autoplay; fullscreen"
-            style={{ borderRadius: 10 }}
-          />
+
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Spinner color="default" />
         </div>
+      )}
+
+      {serie.backdrop_path ? (
+        <Banner
+          srcImg={serie.backdrop_path}
+          alt={serie.name}
+          style={{
+            height: 200,
+            margin: 0,
+            marginTop: 20,
+          }}
+        />
+      ) : null}
+
+      <div className="container py-8">
+        <iframe
+          src={`https://vidsrc.pro/embed/tv/${serieId}/${seasonId}/${episodeId}`}
+          className="absolute w-full border-0 rounded-lg shadow-lg h-96"
+          allowFullScreen
+          allow="autoplay; fullscreen"
+          frameBorder="0"
+          onLoad={handleIframeLoad}
+        />
       </div>
     </div>
   );
@@ -104,14 +130,9 @@ const ChapterState = ({
         <ArrowLeft className="w-4 h-4 text-black dark:text-white" />
       </button>
 
-      <div className="relative h-[400px] overflow-hidden rounded-[1rem] mx-4 mt-4">
-        <Image
-          src={`https://image.tmdb.org/t/p/original${serie.backdrop_path}`}
-          alt={`${chapter.name} backdrop`}
-          className="brightness-30"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
-      </div>
+      {serie.backdrop_path ? (
+        <Banner srcImg={serie.backdrop_path} alt={chapter.name} />
+      ) : null}
 
       <div className="container px-4 py-8">
         <div className="flex gap-8 lg:gap-16">
@@ -192,14 +213,9 @@ const DefaultState = ({
 }: DefaultStateProps) => {
   return (
     <div className="max-h-screen overflow-y-auto text-black dark:text-white">
-      <div className="relative h-[400px] overflow-hidden rounded-[1rem] mx-4 mt-4">
-        <Image
-          src={`https://image.tmdb.org/t/p/original${serie.backdrop_path}`}
-          alt={`${serie.name} backdrop`}
-          className="brightness-30"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
-      </div>
+      {serie.backdrop_path ? (
+        <Banner srcImg={serie.backdrop_path} alt={serie.name} />
+      ) : null}
 
       <div className="container px-4 py-8">
         <div className="flex gap-8 lg:gap-16">
@@ -363,6 +379,7 @@ export const Section = ({ item }: SerieSectionProps) => {
             transition={{ duration: 0.3 }}
           >
             <StreamingVideo
+              serie={serie}
               serieId={serieId}
               seasonId={seasonId}
               episodeId={episodeId}
