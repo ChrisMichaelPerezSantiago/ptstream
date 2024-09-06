@@ -33,6 +33,19 @@ const SerieFilterSchema = Schema.Struct({
   include_video: Schema.optional(Schema.Boolean),
 });
 
+const PromoResultSchema = Schema.Struct({
+  iso_639_1: Schema.String,
+  iso_3166_1: Schema.String,
+  name: Schema.String,
+  key: Schema.String,
+  site: Schema.String,
+  size: Schema.Number,
+  type: Schema.String,
+  official: Schema.Boolean,
+  published_at: Schema.String,
+  id: Schema.String
+});
+
 export const MovieResultsEntitySchema = Schema.Struct({
   adult: Schema.Boolean,
   backdrop_path: Schema.String,
@@ -176,15 +189,20 @@ const SerieSchema = Schema.Struct({
   total_pages: Schema.Number,
   total_results: Schema.Number,
 });
-
+const PromoSchema = Schema.Struct({
+  page: Schema.Number,
+  results: Schema.optional(Schema.Array(PromoResultSchema)),
+});
 
 export type MovieReturnType = Schema.Schema.Type<typeof MovieSchema>;
 export type SerieReturnType = Schema.Schema.Type<typeof SerieSchema>;
+export type PromoReturnType = Schema.Schema.Type<typeof PromoSchema>;
 
 export type MovieResult = Schema.Schema.Type<typeof MovieSchema.fields.results>;
 export type SerieResult = Schema.Schema.Type<typeof SerieSchema.fields.results>;
 export type SerieSeasonsResult = Schema.Schema.Type<typeof SerieSeasonsResultsEntitySchema>;
 export type Seasons = Schema.Schema.Type<typeof SerieSeasonsResultsEntitySchema.fields.seasons>;
+export type PromoResult = Schema.Schema.Type<typeof PromoSchema.fields.results>;
 
 export type MovieFilter = Schema.Schema.Type<typeof MovieFilterSchema>;
 export type SerieFilter = Schema.Schema.Type<typeof SerieFilterSchema>;
@@ -192,7 +210,7 @@ export type SerieFilter = Schema.Schema.Type<typeof SerieFilterSchema>;
 export type UniqueMovie = MovieResult[0];
 export type UniqueSerie = SerieResult[0];
 export type UniqueSerieSeason = Seasons[0];
-
+export type UniquePromo = PromoResult[0];
 
 export type HttpClientConfig = {
   baseUrl: string;
