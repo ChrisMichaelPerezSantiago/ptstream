@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge, Button, Image, Spinner } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -11,10 +11,12 @@ import {
 } from "lucide-react";
 import { map, range, toUpper } from "lodash";
 
-import { UniqueMovie } from "../../types";
+import { PromoResult, PromoReturnType, UniqueMovie } from "../../types";
 import { moviesGenres } from "../../constants";
 import { parseDate } from "../../toolkit/serie";
 import Banner from "../Banner";
+import useGetPromoById from "../../hooks/useGetPromoById";
+import PlyrVideoPlayer from "../PlyrVideoPlayer";
 
 type MovieSectionProps = {
   item: UniqueMovie;
@@ -23,6 +25,7 @@ type MovieSectionProps = {
 type DefaultStateProps = {
   movie: UniqueMovie;
   onWatchNow: () => void;
+  onWatchPromo: () => void;
 };
 
 type StreamingVideoProps = {
@@ -98,7 +101,11 @@ const StreamingVideo = ({
   );
 };
 
-const DefaultState = ({ movie, onWatchNow }: DefaultStateProps) => {
+const DefaultState = ({
+  movie,
+  onWatchNow,
+  onWatchPromo,
+}: DefaultStateProps) => {
   return (
     <div className="max-h-screen overflow-y-auto text-black dark:text-white">
       {movie.backdrop_path ? (
@@ -161,6 +168,13 @@ const DefaultState = ({ movie, onWatchNow }: DefaultStateProps) => {
                 <PlayCircle className="w-4 h-4 mr-2" />
                 Watch Now
               </Button>
+              <Button
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                onClick={onWatchPromo}
+              >
+                <PlayCircle className="w-4 h-4 mr-2" />
+                Watch Promo
+              </Button>
             </div>
             <div className="grid grid-cols-2 gap-4 text-sm">
               {movie.release_date && (
@@ -196,14 +210,39 @@ const DefaultState = ({ movie, onWatchNow }: DefaultStateProps) => {
 
 export const Section = ({ item }: MovieSectionProps) => {
   const [watchNow, setWatchNow] = useState(false);
+  const [watchPromo, setWatchPromo] = useState(false);
+  const [promo, setPromo] = useState<PromoResult>();
   const movie = item;
 
   const handleBack = () => {
     setWatchNow(false);
   };
 
+  const { mutate: mutatePromo } = useGetPromoById({
+    onSuccess: (data: PromoReturnType) => {
+      setPromo(data.results);
+    },
+    onError: (error: Error) => {
+      console.error("Error fetching promo by movie id:", error);
+    },
+  });
+
+  // get promo for a particular movie
+  useEffect(() => {
+    if (movie.id) {
+      mutatePromo({ id: `movie/${movie.id}` });
+    }
+  }, [movie.id]);
+
   return (
     <div className="relative">
+      {watchPromo ? (
+        <PlyrVideoPlayer
+          promo={promo}
+          onClosePlayer={() => setWatchPromo(false)}
+        />
+      ) : null}
+
       <AnimatePresence>
         {watchNow ? (
           <motion.div
@@ -223,7 +262,11 @@ export const Section = ({ item }: MovieSectionProps) => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <DefaultState movie={movie} onWatchNow={() => setWatchNow(true)} />
+            <DefaultState
+              movie={movie}
+              onWatchNow={() => setWatchNow(true)}
+              onWatchPromo={() => setWatchPromo(true)}
+            />
           </motion.div>
         )}
       </AnimatePresence>

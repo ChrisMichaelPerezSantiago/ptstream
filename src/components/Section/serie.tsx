@@ -12,12 +12,14 @@ import {
 } from "lucide-react";
 import { chain, get, map, range, toUpper } from "lodash";
 
-import { UniqueSerie } from "../../types";
+import { PromoResult, PromoReturnType, UniqueSerie } from "../../types";
 import { tvSeriesGenres } from "../../constants";
 import SeriesDropdown from "../../components/SeasonsDropdown";
 import useGetChapterBySeasonId from "../../hooks/useGetChapterBySeasonId";
+import useGetPromoById from "../../hooks/useGetPromoById";
 import { formatRuntime, parseDate } from "../../toolkit/serie";
 import Banner from "../Banner";
+import PlyrVideoPlayer from "../PlyrVideoPlayer";
 
 type SerieSectionProps = {
   item: UniqueSerie;
@@ -69,6 +71,7 @@ const StreamingVideo = ({
   onBack,
 }: StreamingVideoProps) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isFloating] = useState(true);
 
   const handleIframeLoad = () => {
     setIsLoading(false);
@@ -101,7 +104,11 @@ const StreamingVideo = ({
         />
       ) : null}
 
-      <div className="container py-8">
+      <div
+        className={`container py-8 ${
+          isFloating ? "animate-iframe-drop-effect" : ""
+        }`}
+      >
         <iframe
           src={`https://vidsrc.pro/embed/tv/${serieId}/${seasonId}/${episodeId}`}
           className="absolute w-full border-0 rounded-lg shadow-lg h-96"
@@ -266,13 +273,13 @@ const DefaultState = ({
               )}
             </div>
             <div className="flex flex-col gap-4 sm:flex-row">
-              {/* <Button
+              <Button
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
                 onClick={onWatchNow}
               >
                 <PlayCircle className="w-4 h-4 mr-2" />
-                Watch Now
-              </Button> */}
+                Watch Promo
+              </Button>
               <SeriesDropdown id={serie.id} watchChapter={watchChapter} />
             </div>
             <div className="grid grid-cols-2 gap-4 text-sm">
@@ -309,11 +316,13 @@ const DefaultState = ({
 
 export const Section = ({ item }: SerieSectionProps) => {
   const [watchNow, setWatchNow] = useState(false);
+  const [watchPromo, setWatchPromo] = useState(false);
   const [backToSeason, setBackToSeason] = useState(false);
   const [serieId, setSerieId] = useState<number>();
   const [seasonId, setSeasonId] = useState<number>();
   const [episodeId, setEpisodeId] = useState<number>();
   const [chapter, setChapter] = useState<any>(null);
+  const [promo, setPromo] = useState<PromoResult>();
   const serie = item;
 
   const handleBack = () => {
@@ -330,6 +339,15 @@ export const Section = ({ item }: SerieSectionProps) => {
     },
     onError: (error: Error) => {
       console.error("Error fetching chapter by season id:", error);
+    },
+  });
+
+  const { mutate: mutatePromo } = useGetPromoById({
+    onSuccess: (data: PromoReturnType) => {
+      setPromo(data.results);
+    },
+    onError: (error: Error) => {
+      console.error("Error fetching promo by season id:", error);
     },
   });
 
@@ -360,6 +378,13 @@ export const Section = ({ item }: SerieSectionProps) => {
     setSerieId(null);
   };
 
+  // get promo for a particular serie
+  useEffect(() => {
+    if (serie.id) {
+      mutatePromo({ id: `tv/${serie.id}` });
+    }
+  }, [serie.id]);
+
   // reset state when back to season
   useEffect(() => {
     if (backToSeason) {
@@ -369,6 +394,20 @@ export const Section = ({ item }: SerieSectionProps) => {
 
   return (
     <div className="relative">
+      {watchPromo ? (
+        <motion.div
+          key="streaming"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <PlyrVideoPlayer
+            promo={promo}
+            onClosePlayer={() => setWatchPromo(false)}
+          />
+        </motion.div>
+      ) : null}
       <AnimatePresence>
         {watchNow ? (
           <motion.div
@@ -397,7 +436,7 @@ export const Section = ({ item }: SerieSectionProps) => {
             {!chapter || backToSeason ? (
               <DefaultState
                 serie={serie}
-                onWatchNow={() => setWatchNow(true)}
+                onWatchNow={() => setWatchPromo(true)}
                 watchChapter={(serieId, seasonId, episodeId) =>
                   watchChapter(serieId, seasonId, episodeId)
                 }
