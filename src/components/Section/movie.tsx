@@ -55,6 +55,7 @@ const StreamingVideo = ({
   onBack,
 }: StreamingVideoProps) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isFloating] = useState(true);
 
   const handleIframeLoad = () => {
     setIsLoading(false);
@@ -87,7 +88,11 @@ const StreamingVideo = ({
         />
       ) : null}
 
-      <div className="container py-8">
+      <div
+        className={`container py-8 ${
+          isFloating ? "animate-iframe-drop-effect" : ""
+        }`}
+      >
         <iframe
           src={`https://vidsrc.pro/embed/movie/${id}`}
           className="absolute w-full border-0 rounded-lg shadow-lg h-96"
