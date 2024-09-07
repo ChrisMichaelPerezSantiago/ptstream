@@ -9,7 +9,7 @@ import {
   ThumbsUp,
   ArrowLeft,
 } from "lucide-react";
-import { map, range, toUpper } from "lodash";
+import { map, merge, range, toUpper } from "lodash";
 
 import { PromoResult, PromoReturnType, UniqueMovie } from "../../types";
 import { moviesGenres } from "../../constants";
@@ -17,6 +17,7 @@ import { parseDate } from "../../toolkit/serie";
 import Banner from "../Banner";
 import useGetPromoById from "../../hooks/useGetPromoById";
 import PlyrVideoPlayer from "../PlyrVideoPlayer";
+import FavoriteButton from "../FavoriteButton";
 
 type MovieSectionProps = {
   item: UniqueMovie;
@@ -274,6 +275,7 @@ export const Section = ({ item }: MovieSectionProps) => {
             />
           </motion.div>
         )}
+        <FavoriteButton item={merge(item, { media_type: "movie" })} />
       </AnimatePresence>
     </div>
   );

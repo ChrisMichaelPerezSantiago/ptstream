@@ -10,7 +10,7 @@ import {
   ThumbsUp,
   ArrowLeft,
 } from "lucide-react";
-import { chain, get, map, range, toUpper } from "lodash";
+import { chain, get, map, merge, range, toUpper, xor } from "lodash";
 
 import { PromoResult, PromoReturnType, UniqueSerie } from "../../types";
 import { tvSeriesGenres } from "../../constants";
@@ -20,6 +20,7 @@ import useGetPromoById from "../../hooks/useGetPromoById";
 import { formatRuntime, parseDate } from "../../toolkit/serie";
 import Banner from "../Banner";
 import PlyrVideoPlayer from "../PlyrVideoPlayer";
+import FavoriteButton from "../FavoriteButton";
 
 type SerieSectionProps = {
   item: UniqueSerie;
@@ -323,7 +324,10 @@ export const Section = ({ item }: SerieSectionProps) => {
   const [episodeId, setEpisodeId] = useState<number>();
   const [chapter, setChapter] = useState<any>(null);
   const [promo, setPromo] = useState<PromoResult>();
+  const [isFavorite, setIsFavorite] = useState(false); // New state for favorite
   const serie = item;
+
+  console.log(JSON.stringify(serie, null, 2));
 
   const handleBack = () => {
     setWatchNow(false);
@@ -331,6 +335,10 @@ export const Section = ({ item }: SerieSectionProps) => {
 
   const handleBackToSeason = () => {
     setBackToSeason(true);
+  };
+
+  const toggleFavorite = () => {
+    setIsFavorite((prevFavorite) => xor([prevFavorite], [true]).length > 0);
   };
 
   const { mutate: mutateChapter } = useGetChapterBySeasonId({
@@ -451,6 +459,7 @@ export const Section = ({ item }: SerieSectionProps) => {
             )}
           </motion.div>
         )}
+        <FavoriteButton item={merge(item, { media_type: "tv" })} />
       </AnimatePresence>
     </div>
   );

@@ -33,7 +33,7 @@ export function PlyrVideoPlayer({
     <div
       className={`${
         isFloating
-          ? "fixed bottom-4 right-4 w-1/3 z-50 animate-pip-drop-effect"
+          ? "fixed bottom-4 right-10 w-1/3 z-50 animate-pip-drop-effect"
           : "relative w-3/4 mx-auto"
       } overflow-hidden rounded-lg aspect-w-16 aspect-h-9`}
     >
