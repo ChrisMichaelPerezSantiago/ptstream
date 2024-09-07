@@ -14,6 +14,7 @@ import Root from "./scenes/root";
 import TvIcon from "./components/Icons/TvIcon";
 import MovieIcon from "./components/Icons/MovieIcon";
 import Search from "./components/scenes/Search";
+import MyFa from "./components/scenes/MyFavorites";
 import { setScene } from "./redux/scenes/sceneSlice";
 import SerieScene from "./components/scenes/Series";
 import MovieScene from "./components/scenes/Movies";
@@ -109,6 +110,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Root />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/myFavorites" element={<MyFa />} />
         </Routes>
       </main>
       <Footer />
