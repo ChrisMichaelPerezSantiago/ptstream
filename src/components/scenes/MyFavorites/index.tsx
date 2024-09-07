@@ -1,11 +1,13 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import { Chip, useDisclosure } from "@nextui-org/react";
-import { map } from "lodash";
+import { filter, includes, map } from "lodash";
+import { useSelector } from "react-redux";
 
 import { MyFavoritesTableContainer } from "../../TableContainer";
 import { ModalContainer } from "../../ModalContainer";
 import { MovieSection, SerieSection } from "../../Section";
 import { getAllLikedItems } from "../../../toolkit/localstorage";
+import { RootState } from "../../../redux/store";
 
 type MediaType = "movie" | "tv";
 
@@ -38,15 +40,26 @@ const DefaultState = () => (
   </div>
 );
 
+const FilterEmptyState = () => (
+  <div className="text-sm text-default-500">
+    <p>No favorites found</p>
+  </div>
+);
+
 const transformMyFavorites = (data: any) => map(data, (item) => item);
 
 export default function MyFavoriteScene() {
   const [record, setRecord] = useState<any>();
+  const [isLoading, setIsLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const currentGenre = useSelector(
+    (state: RootState) => state.genre.selectedGenre
+  );
 
   const items = getAllLikedItems();
 
-  const myFavorites = transformMyFavorites(items);
+  const [myFavorites, setMyFavorites] = useState(transformMyFavorites(items));
 
   const handleOpenModal = (recordSelected: any) => {
     setRecord(recordSelected);
@@ -62,13 +75,30 @@ export default function MyFavoriteScene() {
     },
   };
 
+  // filter items by genre if currentGenre is not 0
+  // else reset state to default items
+  useEffect(() => {
+    setIsLoading(true);
+    const filteredFavorites =
+      currentGenre > 0
+        ? filter(transformMyFavorites(items), (item) =>
+            includes(item.genre_ids, currentGenre)
+          )
+        : transformMyFavorites(items);
+
+    setMyFavorites(filteredFavorites);
+    setIsLoading(false);
+  }, [currentGenre]);
+
   return (
     <Fragment>
       <MyFavoritesTableContainer
-        isLoading={false}
+        isLoading={isLoading}
         rows={myFavorites}
         handleOpenModal={handleOpenModal}
-        emptyContentLabel={<DefaultState />}
+        emptyContentLabel={
+          currentGenre > 0 ? <FilterEmptyState /> : <DefaultState />
+        }
       />
 
       {record ? (
