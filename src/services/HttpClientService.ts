@@ -1,6 +1,8 @@
 import { Console, Context, Effect, Layer } from "effect";
 
-import { HttpClientConfig } from "src/types";
+import { HttpClientConfig } from "../types";
+
+
 
 const makeHttpClientService = (config: HttpClientConfig) =>
   Effect.gen(function* () {
@@ -8,8 +10,15 @@ const makeHttpClientService = (config: HttpClientConfig) =>
       Effect.try({
         try: async () => {
           const url = `${config.baseUrl}${endpoint}`;
+
+          const headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+            ...options?.headers
+          };
+
           const response = await fetch(url, {
             ...options,
+            headers: headers,
           });
 
           if (!response.ok) {
