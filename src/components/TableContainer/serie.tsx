@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { Button, Spinner, Image } from "@nextui-org/react";
-import { map, size, truncate } from "lodash";
+import { map, size, throttle, truncate } from "lodash";
 
 import { SerieResult, UniqueSerie } from "../../types";
+
+const SCROLL_DELAY = 500; // Throttle delay in ms
 
 type TableContainerProps = {
   rows: SerieResult;
@@ -71,19 +73,21 @@ export const TableContainer = ({
 
   // Scroll event listener
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       const scrollableHeight = document.documentElement.scrollHeight;
       const scrolled = window.innerHeight + window.scrollY;
 
-      if (scrolled >= scrollableHeight - 100 && hasMore && !isLoading) {
+      // Check if near the bottom of the page and if there are more pages to load
+      if (scrolled >= scrollableHeight && hasMore && !isLoading) {
         watchPage(page + 1);
       }
-    };
+    }, SCROLL_DELAY); // Throttle the function
 
     window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      handleScroll.cancel(); // Cancel any pending throttled calls
     };
   }, [hasMore, isLoading, page, watchPage]);
 
@@ -93,11 +97,6 @@ export const TableContainer = ({
   const EmptyState = () => (
     <div className="flex justify-center w-full">{emptyContentLabel}</div>
   );
-
-  // track page value changes
-  useEffect(() => {
-    watchPage(page);
-  }, [page]);
 
   return (
     <div>
