@@ -1,6 +1,6 @@
 import { useState, Fragment, useEffect } from "react";
 import { Chip, useDisclosure } from "@nextui-org/react";
-import { filter, includes, map } from "lodash";
+import { filter, includes, map, size } from "lodash";
 import { useSelector } from "react-redux";
 
 import { MyFavoritesTableContainer } from "../../TableContainer";
@@ -8,6 +8,7 @@ import { ModalContainer } from "../../ModalContainer";
 import { MovieSection, SerieSection } from "../../Section";
 import { getAllLikedItems } from "../../../toolkit/localstorage";
 import { RootState } from "../../../redux/store";
+import ScrollToTopButton from "../../../components/ScrollToTopButton";
 
 type MediaType = "movie" | "tv";
 
@@ -61,6 +62,8 @@ export default function MyFavoriteScene() {
 
   const [myFavorites, setMyFavorites] = useState(transformMyFavorites(items));
 
+  const showScrollToTop = size(myFavorites) >= 100;
+
   const handleOpenModal = (recordSelected: any) => {
     setRecord(recordSelected);
     onOpen();
@@ -100,6 +103,8 @@ export default function MyFavoriteScene() {
           currentGenre > 0 ? <FilterEmptyState /> : <DefaultState />
         }
       />
+
+      {showScrollToTop ? <ScrollToTopButton /> : null}
 
       {record ? (
         <ModalContainer

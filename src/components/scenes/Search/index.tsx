@@ -1,11 +1,12 @@
 import { useState, useCallback, Fragment } from "react";
 import { Chip, useDisclosure } from "@nextui-org/react";
-import { debounce } from "lodash";
+import { debounce, size } from "lodash";
 
 import useSearch from "../../../hooks/useSearch";
 import { SearchTableContainer } from "../../TableContainer";
 import { ModalContainer } from "../../ModalContainer";
 import { MovieSection, SerieSection } from "../../Section";
+import ScrollToTopButton from "../../../components/ScrollToTopButton";
 
 const DefaultState = () => (
   <div className="flex flex-col items-center justify-center text-center">
@@ -41,7 +42,10 @@ export default function SerieScene() {
   const [totalRecords, setTotalRecords] = useState<number>();
   const [page, setPage] = useState<number>(1);
   const [record, setRecord] = useState();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const showScrollToTop = size(records) >= 100;
 
   const { mutate: mutateSearch, status } = useSearch({
     onSuccess: (data) => {
@@ -94,6 +98,8 @@ export default function SerieScene() {
         handleOpenModal={handleOpenModal}
         emptyContentLabel={<DefaultState />}
       />
+
+      {showScrollToTop ? <ScrollToTopButton /> : null}
 
       {record ? (
         <ModalContainer
