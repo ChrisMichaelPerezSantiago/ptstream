@@ -1,7 +1,7 @@
 import { useState, useCallback, Fragment, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useDisclosure } from "@nextui-org/react";
-import { unionBy, set } from "lodash";
+import { unionBy, set, size } from "lodash";
 
 import { SerieResult, SerieReturnType, UniqueSerie } from "../../../types";
 import useSeries from "../../../hooks/useSeries";
@@ -9,6 +9,7 @@ import { SerieTableContainer } from "../../TableContainer";
 import { ModalContainer } from "../../ModalContainer";
 import { SerieSection } from "../../Section";
 import { RootState } from "../../../redux/store";
+import ScrollToTopButton from "../../../components/ScrollToTopButton";
 
 export default function SerieScene() {
   const [series, setSeries] = useState<SerieResult>([]);
@@ -23,6 +24,8 @@ export default function SerieScene() {
   );
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const showScrollToTop = size(series) >= 100;
 
   const handleOpenModal = (recordSelected: UniqueSerie) => {
     setRecord(recordSelected);
@@ -83,6 +86,8 @@ export default function SerieScene() {
         handleOpenModal={handleOpenModal}
         emptyContentLabel="No series found"
       />
+
+      {showScrollToTop ? <ScrollToTopButton /> : null}
 
       <ModalContainer
         size="full"

@@ -1,7 +1,7 @@
 import { useState, useCallback, Fragment, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDisclosure } from "@nextui-org/react";
-import { set, unionBy } from "lodash";
+import { set, size, unionBy } from "lodash";
 
 import { MovieResult, MovieReturnType, UniqueMovie } from "../../../types";
 import useMovies from "../../../hooks/useMovies";
@@ -9,6 +9,7 @@ import { MovieTableContainer } from "../../TableContainer";
 import { ModalContainer } from "../../ModalContainer";
 import { MovieSection } from "../../Section";
 import { RootState } from "../../../redux/store";
+import ScrollToTopButton from "../../../components/ScrollToTopButton";
 
 export default function MovieScene() {
   const [movies, setMovies] = useState<MovieResult>([]);
@@ -23,6 +24,8 @@ export default function MovieScene() {
   );
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const showScrollToTop = size(movies) >= 100;
 
   const handleOpenModal = (recordSelected: UniqueMovie) => {
     setRecord(recordSelected);
@@ -84,6 +87,8 @@ export default function MovieScene() {
         handleOpenModal={handleOpenModal}
         emptyContentLabel="No movies found"
       />
+
+      {showScrollToTop ? <ScrollToTopButton /> : null}
 
       <ModalContainer
         size="full"
