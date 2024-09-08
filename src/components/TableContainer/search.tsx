@@ -58,16 +58,19 @@ export const TableContainer = ({
       <div className="flex flex-col gap-4">
         <div className="flex items-end justify-between gap-3">
           <Input
-            isClearable
+            isClearable={isLoading ? false : true}
             className="w-full sm:max-w-[44%]"
             placeholder="Search by name..."
             startContent={<SearchIcon />}
+            endContent={
+              isLoading ? <Spinner size="sm" color="default" /> : null
+            }
             onValueChange={(value) => watchInputSearch(value)}
           />
         </div>
       </div>
     );
-  }, [watchInputSearch]);
+  }, [watchInputSearch, isLoading]);
 
   const DataState = () => (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
