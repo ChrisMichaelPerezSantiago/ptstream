@@ -45,7 +45,7 @@ export default function SerieScene() {
   };
 
   const buildPayload = useCallback(() => {
-    let payload = { page };
+    const payload = { page };
     if (currentGenre > 0) {
       reset();
       set(payload, "with_genres", currentGenre);
