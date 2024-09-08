@@ -2,8 +2,6 @@ import { Console, Context, Effect, Layer } from "effect";
 
 import { HttpClientConfig } from "../types";
 
-
-
 const makeHttpClientService = (config: HttpClientConfig) =>
   Effect.gen(function* () {
     const makeRequest = (endpoint: string, options?: RequestInit) =>
