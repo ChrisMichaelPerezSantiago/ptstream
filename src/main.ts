@@ -1,4 +1,5 @@
-import { app, BrowserWindow } from 'electron';
+import { ElectronBlocker } from '@cliqz/adblocker-electron';
+import { app, BrowserWindow, session } from 'electron';
 import path from 'path';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -27,6 +28,12 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
+
+
+  // block ads
+  ElectronBlocker.fromPrebuiltAdsAndTracking(fetch).then((blocker) => {
+    blocker.enableBlockingInSession(session.defaultSession);
+  });
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();

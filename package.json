@@ -37,6 +37,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@cliqz/adblocker-electron": "^1.33.2",
     "@effect/platform": "^0.62.2",
     "@effect/schema": "^0.71.1",
     "@headlessui/react": "^2.1.3",
