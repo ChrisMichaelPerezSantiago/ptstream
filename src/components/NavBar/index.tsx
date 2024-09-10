@@ -17,7 +17,7 @@ export default function NavBar() {
 
   useEffect(() => {
     navigate(NAVIGATION_MAP[selected]);
-  }, [selected, navigate]);
+  }, [selected]);
 
   const handleSelectionChange = (key: Key) => {
     setSelected(key);
