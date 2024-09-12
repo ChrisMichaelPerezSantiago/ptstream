@@ -12,7 +12,7 @@ type TableContainerProps = {
   page: number;
   handleOpenModal: (recordSelected: UniqueSerie) => void;
   watchPage: (page: number) => void;
-  emptyContentLabel: string;
+  emptyContentLabel: JSX.Element;
   isLoading?: boolean;
 };
 

@@ -11,6 +11,12 @@ import { SerieSection } from "../../Section";
 import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
 
+const EmptyState = () => (
+  <div className="text-sm text-default-500">
+    <p>No series found</p>
+  </div>
+);
+
 export default function SerieScene() {
   const [series, setSeries] = useState<SerieResult>([]);
   const [totalRecords, setTotalRecords] = useState<number>();
@@ -74,6 +80,7 @@ export default function SerieScene() {
   }, [currentGenre]);
 
   const isLoading = status === "pending";
+  const emptyState = !isLoading && size(series) === 0;
 
   return (
     <Fragment>
@@ -84,7 +91,7 @@ export default function SerieScene() {
         page={page}
         watchPage={setPage}
         handleOpenModal={handleOpenModal}
-        emptyContentLabel="No series found"
+        emptyContentLabel={emptyState ? <EmptyState /> : null}
       />
 
       {showScrollToTop ? <ScrollToTopButton /> : null}
