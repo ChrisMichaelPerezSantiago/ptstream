@@ -11,6 +11,12 @@ import { MovieSection } from "../../Section";
 import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
 
+const EmptyState = () => (
+  <div className="text-sm text-default-500">
+    <p>No movies found</p>
+  </div>
+);
+
 export default function MovieScene() {
   const [movies, setMovies] = useState<MovieResult>([]);
   const [totalRecords, setTotalRecords] = useState<number>();
@@ -75,6 +81,7 @@ export default function MovieScene() {
   }, [currentGenre]);
 
   const isLoading = status === "pending";
+  const emptyState = !isLoading && size(movies) === 0;
 
   return (
     <Fragment>
@@ -85,7 +92,7 @@ export default function MovieScene() {
         page={page}
         watchPage={setPage}
         handleOpenModal={handleOpenModal}
-        emptyContentLabel="No movies found"
+        emptyContentLabel={emptyState ? <EmptyState /> : null}
       />
 
       {showScrollToTop ? <ScrollToTopButton /> : null}
