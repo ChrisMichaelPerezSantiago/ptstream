@@ -40,3 +40,5 @@ export const tvSeriesGenres: { [key: number]: string } = {
   37: "Western",
   0: "Reset"
 };
+
+export const GENRE_RESET_FILTER = 0;

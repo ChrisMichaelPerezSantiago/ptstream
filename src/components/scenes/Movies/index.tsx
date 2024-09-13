@@ -10,6 +10,7 @@ import { ModalContainer } from "../../ModalContainer";
 import { MovieSection } from "../../Section";
 import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
+import { GENRE_RESET_FILTER } from "../../../constants";
 
 const EmptyState = () => (
   <div className="text-sm text-default-500">
@@ -23,7 +24,7 @@ export default function MovieScene() {
   const [page, setPage] = useState<number>(1);
   const [record, setRecord] = useState<UniqueMovie | undefined>();
 
-  const genreChanged = useRef(false);
+  const prevGenreRef = useRef<number>(GENRE_RESET_FILTER);
 
   const currentGenre = useSelector(
     (state: RootState) => state.genre.selectedGenre
@@ -49,36 +50,37 @@ export default function MovieScene() {
     },
   });
 
-  const reset = () => {
-    setMovies([]);
+  const reset = useCallback(() => {
     setPage(1);
-  };
+    setMovies([]);
+  }, []);
 
   const buildPayload = useCallback(() => {
     const payload = { page };
-    if (currentGenre > 0) {
-      reset();
+    if (currentGenre > GENRE_RESET_FILTER) {
       set(payload, "with_genres", currentGenre);
     }
     return payload;
   }, [page, currentGenre]);
 
-  useEffect(() => {
-    if (currentGenre > 0 || page > 0) {
-      if (genreChanged.current) {
-        reset();
-      }
-
-      genreChanged.current = false;
-      mutateMovies(buildPayload());
+  const makeRequest = useCallback(() => {
+    // Reset only if the genre has changed
+    if (currentGenre !== prevGenreRef.current) {
+      reset();
     }
-  }, [currentGenre, page, buildPayload, mutateMovies]);
+
+    // If the current genre is 0, refresh the app
+    if (currentGenre === 0) {
+      window.location.reload();
+    }
+
+    mutateMovies(buildPayload());
+    prevGenreRef.current = currentGenre;
+  }, [currentGenre, buildPayload, mutateMovies, reset]);
 
   useEffect(() => {
-    if (currentGenre > 0) {
-      genreChanged.current = true;
-    }
-  }, [currentGenre]);
+    makeRequest();
+  }, [makeRequest]);
 
   const isLoading = status === "pending";
   const emptyState = !isLoading && size(movies) === 0;
