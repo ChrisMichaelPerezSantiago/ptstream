@@ -40,7 +40,6 @@ type ChapterStateProps = {
 };
 
 type StreamingVideoProps = {
-  serie: UniqueSerie;
   serieId: number;
   seasonId: number;
   episodeId: number;
@@ -65,7 +64,6 @@ const getGenreName = (id: number) => {
 };
 
 const StreamingVideo = ({
-  serie,
   serieId,
   seasonId,
   episodeId,
@@ -74,18 +72,20 @@ const StreamingVideo = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isFloating] = useState(true);
 
-  const handleIframeLoad = () => {
-    setIsLoading(false);
-  };
+  const onLoad = () => setIsLoading(false);
+
+  const src = `https://vidsrc.pro/embed/tv/${serieId}/${seasonId}/${episodeId}`;
 
   return (
-    <div className="flex flex-col min-h-screen text-black dark:text-white">
-      <button
-        onClick={onBack}
-        className="flex items-center justify-center w-8 h-8 p-1 text-black transition-colors border rounded-full bg-gray-200/30 backdrop-blur-md border-gray-200/50 dark:bg-gray-800/30 dark:text-white dark:border-gray-800/50 hover:bg-gray-200/40 dark:hover:bg-gray-800/40"
-      >
-        <ArrowLeft className="w-4 h-4 text-black dark:text-white" />
-      </button>
+    <div className="fixed inset-0 text-black bg-black dark:text-white">
+      <div className="absolute z-10 top-4 right-4">
+        <button
+          onClick={onBack}
+          className="flex items-center justify-center w-8 h-8 p-1 text-white transition-colors border rounded-full bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20"
+        >
+          <ArrowLeft className="w-4 h-4 text-white" />
+        </button>
+      </div>
 
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -93,30 +93,15 @@ const StreamingVideo = ({
         </div>
       )}
 
-      {serie.backdrop_path ? (
-        <Banner
-          srcImg={serie.backdrop_path}
-          alt={serie.name}
-          style={{
-            height: 200,
-            margin: 0,
-            marginTop: 20,
-          }}
-        />
-      ) : null}
-
       <div
-        className={`container py-8 ${
-          isFloating ? "animate-iframe-drop-effect" : ""
-        }`}
+        className={`relative w-full h-full ${isFloating ? "animate-iframe-drop-effect" : ""}`}
       >
         <iframe
-          src={`https://vidsrc.pro/embed/tv/${serieId}/${seasonId}/${episodeId}`}
-          className="absolute w-full border-0 rounded-lg shadow-lg h-96"
-          allowFullScreen
+          src={src}
+          className="absolute top-0 left-0 w-full h-full"
           allow="autoplay; fullscreen"
-          frameBorder="0"
-          onLoad={handleIframeLoad}
+          allowFullScreen
+          onLoad={onLoad}
         />
       </div>
     </div>
@@ -419,7 +404,6 @@ export const Section = ({ item }: SerieSectionProps) => {
             transition={{ duration: 0.3 }}
           >
             <StreamingVideo
-              serie={serie}
               serieId={serieId}
               seasonId={seasonId}
               episodeId={episodeId}
@@ -452,7 +436,9 @@ export const Section = ({ item }: SerieSectionProps) => {
             )}
           </motion.div>
         )}
-        <FavoriteButton item={merge(item, { media_type: "tv" })} />
+        {!!watchNow ? null : (
+          <FavoriteButton item={merge(item, { media_type: "tv" })} />
+        )}
       </AnimatePresence>
     </div>
   );
