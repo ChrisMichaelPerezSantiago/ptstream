@@ -16,8 +16,6 @@ import MovieIcon from "./components/Icons/MovieIcon";
 import Search from "./components/scenes/Search";
 import MyFa from "./components/scenes/MyFavorites";
 import { setScene } from "./redux/scenes/sceneSlice";
-import SerieScene from "./components/scenes/Series";
-import MovieScene from "./components/scenes/Movies";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import GenreSelector from "./components/GenreSelector";
@@ -32,11 +30,9 @@ const queryClient = new QueryClient();
 
 const scenes: Record<Scene, SceneProps> = {
   series: {
-    component: <SerieScene />,
     icon: TvIcon,
   },
   movies: {
-    component: <MovieScene />,
     icon: MovieIcon,
   },
 };

@@ -6,8 +6,8 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 export type SceneProps = {
-  component: JSX.Element;
-  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  component?: JSX.Element;
+  icon?: ComponentType<SVGProps<SVGSVGElement>>;
 };
 
 export type Scene = "series" | "movies";
