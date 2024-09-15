@@ -14,23 +14,13 @@ export default function Banner({
   imageStyle,
 }: BannerProps) {
   return (
-    <div
-      style={{
-        height: "400px",
-        overflow: "hidden",
-        borderRadius: "1rem",
-        margin: "1rem",
-        position: "relative",
-        ...style,
-      }}
-    >
+    <div className="relative m-4 overflow-hidden rounded-2xl" style={style}>
       <Image
+        className="object-cover w-full h-full"
         src={`https://image.tmdb.org/t/p/original${srcImg}`}
         alt={`${alt} backdrop`}
         style={{
-          height: "100%",
-          width: "100%",
-          objectFit: "contain",
+          ...imageStyle,
         }}
       />
       <div
