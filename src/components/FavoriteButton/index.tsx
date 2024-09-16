@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import { Heart, HeartCrack } from "lucide-react";
 import { motion } from "framer-motion";
-import {
-  addLikedItem,
-  removeLikedItem,
-  isItemLiked,
-} from "../../toolkit/localstorage";
+import * as MyFavLocalStorage from "../../toolkit/MyFavLocalStorage";
 
 type FavoriteButtonProps = {
   item: any;
@@ -16,14 +12,14 @@ const FavoriteButton = ({ item }: FavoriteButtonProps) => {
 
   useEffect(() => {
     // Check if the item is already liked when the component mounts
-    setIsFavorite(isItemLiked(item.id));
+    setIsFavorite(MyFavLocalStorage.isItemLiked(item.id));
   }, [item.id]);
 
   const toggleFavorite = () => {
     if (isFavorite) {
-      removeLikedItem(item.id);
+      MyFavLocalStorage.removeLikedItem(item.id);
     } else {
-      addLikedItem(item);
+      MyFavLocalStorage.addLikedItem(item);
     }
     setIsFavorite(!isFavorite);
   };

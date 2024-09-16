@@ -21,6 +21,7 @@ import { formatRuntime, parseDate } from "../../toolkit/serie";
 import Banner from "../Banner";
 import PlyrVideoPlayer from "../PlyrVideoPlayer";
 import FavoriteButton from "../FavoriteButton";
+import ChapterWatchedButton from "../ChapterWatchedButton";
 
 type SerieSectionProps = {
   item: UniqueSerie;
@@ -35,6 +36,9 @@ type DefaultStateProps = {
 type ChapterStateProps = {
   chapter: any;
   serie: UniqueSerie;
+  serieId: number;
+  seasonId: number;
+  episodeId: number;
   onWatchNow: () => void;
   onBack: () => void;
 };
@@ -111,6 +115,9 @@ const StreamingVideo = ({
 const ChapterState = ({
   chapter,
   serie,
+  serieId,
+  seasonId,
+  episodeId,
   onWatchNow,
   onBack,
 }: ChapterStateProps) => {
@@ -191,6 +198,9 @@ const ChapterState = ({
                   Runtime: {formatRuntime(chapter.runtime)}
                 </div>
               )}
+            </div>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <ChapterWatchedButton item={{ serieId, seasonId, episodeId }} />
             </div>
           </div>
         </div>
@@ -430,13 +440,16 @@ export const Section = ({ item }: SerieSectionProps) => {
               <ChapterState
                 chapter={episode}
                 serie={serie}
+                serieId={serieId}
+                seasonId={seasonId}
+                episodeId={episodeId}
                 onWatchNow={() => setWatchNow(true)}
                 onBack={handleBackToSeason}
               />
             )}
           </motion.div>
         )}
-        {!!watchNow ? null : (
+        {watchNow ? null : (
           <FavoriteButton item={merge(item, { media_type: "tv" })} />
         )}
       </AnimatePresence>
