@@ -1,6 +1,10 @@
-# ✓ Ptstream
+<p align="center">
+  <img src="./public//img/ptstream.png" alt="Ptstream Logo" width="200"/>
+</p>
 
-> ptstream is a straightforward streaming application designed for seamless viewing of movies and TV series. With its intuitive and user-friendly interface, you can effortlessly browse and enjoy your favorite content. 🚀
+<p align="center">
+Ptstream is a straightforward streaming application designed for seamless viewing of movies and TV series. With its intuitive and user-friendly interface, you can effortlessly browse and enjoy your favorite content. 🚀
+ </p>
 
 Project in progress ...
 
