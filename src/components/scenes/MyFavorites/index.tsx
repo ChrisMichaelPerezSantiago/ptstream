@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { MyFavoritesTableContainer } from "../../TableContainer";
 import { ModalContainer } from "../../ModalContainer";
 import { MovieSection, SerieSection } from "../../Section";
-import { getAllLikedItems } from "../../../toolkit/localstorage";
+import * as MyFavLocalStorage from "../../../toolkit/MyFavLocalStorage";
 import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
 
@@ -58,7 +58,7 @@ export default function MyFavoriteScene() {
     (state: RootState) => state.genre.selectedGenre
   );
 
-  const items = getAllLikedItems();
+  const items = MyFavLocalStorage.getAllLikedItems();
 
   const [myFavorites, setMyFavorites] = useState(transformMyFavorites(items));
 
