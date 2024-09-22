@@ -13,7 +13,6 @@ import { map, merge, range, toUpper } from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { PromoResult, PromoReturnType, UniqueMovie } from "../../types";
-import { moviesGenres } from "../../constants";
 import { parseDate } from "../../toolkit/serie";
 import Banner from "../Banner";
 import useGetPromoById from "../../hooks/useGetPromoById";
@@ -48,10 +47,6 @@ const renderStars = (rating: number) => {
   ));
 };
 
-const getGenreName = (id: number) => {
-  return moviesGenres[id] || "Unknown";
-};
-
 const StreamingVideo = ({ movie: { id }, onBack }: StreamingVideoProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFloating] = useState(true);
@@ -78,7 +73,9 @@ const StreamingVideo = ({ movie: { id }, onBack }: StreamingVideoProps) => {
       )}
 
       <div
-        className={`relative w-full h-full ${isFloating ? "animate-iframe-drop-effect" : ""}`}
+        className={`relative w-full h-full ${
+          isFloating ? "animate-iframe-drop-effect" : ""
+        }`}
       >
         <iframe
           src={src}
@@ -136,7 +133,7 @@ const DefaultState = ({
                   key={genreId}
                   className="text-black bg-gray-200 dark:bg-gray-700 dark:text-white"
                 >
-                  {getGenreName(genreId)}
+                  {t(`${genreId}`)}
                 </Badge>
               ))}
             </div>
@@ -149,7 +146,8 @@ const DefaultState = ({
               </div>
               {movie.vote_count && (
                 <span className="text-gray-700 dark:text-gray-300">
-                  ({movie.vote_count.toLocaleString()} {t('Movie_DefaultState_Votes')})
+                  ({movie.vote_count.toLocaleString()}{" "}
+                  {t("Movie_DefaultState_Votes")})
                 </span>
               )}
             </div>
@@ -159,38 +157,41 @@ const DefaultState = ({
                 onClick={onWatchNow}
               >
                 <PlayCircle className="w-4 h-4 mr-2" />
-               {t('Movie_ChapterState_WatchNow')}
+                {t("Movie_ChapterState_WatchNow")}
               </Button>
               <Button
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
                 onClick={onWatchPromo}
               >
                 <PlayCircle className="w-4 h-4 mr-2" />
-                {t('Movie_DefaultState_WatchPromo')}
+                {t("Movie_DefaultState_WatchPromo")}
               </Button>
             </div>
             <div className="grid grid-cols-2 gap-4 text-sm">
               {movie.release_date && (
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  {t('Movie_DefaultState_ReleaseDate')}: {parseDate(movie.release_date)}
+                  {t("Movie_DefaultState_ReleaseDate")}:{" "}
+                  {parseDate(movie.release_date)}
                 </div>
               )}
               {movie.original_language && (
                 <div className="flex items-center">
                   <Globe className="w-4 h-4 mr-2" />
-                  {t('Movie_DefaultState_Language')}: {toUpper(movie.original_language)}
+                  {t("Movie_DefaultState_Language")}:{" "}
+                  {toUpper(movie.original_language)}
                 </div>
               )}
               {movie.popularity && (
                 <div className="flex items-center">
                   <ThumbsUp className="w-4 h-4 mr-2" />
-                  {t('Movie_DefaultState_Popularity')}: {movie.popularity.toFixed(2)}
+                  {t("Movie_DefaultState_Popularity")}:{" "}
+                  {movie.popularity.toFixed(2)}
                 </div>
               )}
               {movie.adult && (
                 <div className="flex items-center">
-                  <Badge>{t('AdultContent')}</Badge>
+                  <Badge>{t("AdultContent")}</Badge>
                 </div>
               )}
             </div>

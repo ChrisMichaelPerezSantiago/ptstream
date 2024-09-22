@@ -14,7 +14,6 @@ import { chain, get, map, merge, range, toUpper } from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { PromoResult, PromoReturnType, UniqueSerie } from "../../types";
-import { tvSeriesGenres } from "../../constants";
 import SeriesDropdown from "../../components/SeasonsDropdown";
 import useGetChapterBySeasonId from "../../hooks/useGetChapterBySeasonId";
 import useGetPromoById from "../../hooks/useGetPromoById";
@@ -64,10 +63,6 @@ const renderStars = (rating: number) => {
   ));
 };
 
-const getGenreName = (id: number) => {
-  return tvSeriesGenres[id] || "Unknown";
-};
-
 const StreamingVideo = ({
   serieId,
   seasonId,
@@ -99,7 +94,9 @@ const StreamingVideo = ({
       )}
 
       <div
-        className={`relative w-full h-full ${isFloating ? "animate-iframe-drop-effect" : ""}`}
+        className={`relative w-full h-full ${
+          isFloating ? "animate-iframe-drop-effect" : ""
+        }`}
       >
         <iframe
           src={src}
@@ -173,7 +170,8 @@ const ChapterState = ({
               </div>
               {chapter.vote_count && (
                 <span className="text-gray-700 dark:text-gray-300">
-                  ({chapter.vote_count.toLocaleString()} {t('Serie_ChapterState_Votes')})
+                  ({chapter.vote_count.toLocaleString()}{" "}
+                  {t("Serie_ChapterState_Votes")})
                 </span>
               )}
             </div>
@@ -184,7 +182,7 @@ const ChapterState = ({
                   onClick={onWatchNow}
                 >
                   <PlayCircle className="w-4 h-4 mr-2" />
-                  {t('Serie_ChapterState_WatchNow')}
+                  {t("Serie_ChapterState_WatchNow")}
                 </Button>
               </div>
             ) : null}
@@ -192,13 +190,15 @@ const ChapterState = ({
               {chapter.air_date && (
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  {t('Serie_ChapterState_AirDate')}: {parseDate(chapter.air_date)}
+                  {t("Serie_ChapterState_AirDate")}:{" "}
+                  {parseDate(chapter.air_date)}
                 </div>
               )}
               {chapter.runtime && (
                 <div className="flex items-center">
                   <Clock className="w-4 h-4 mr-2" />
-                  {t('Serie_ChapterState_Runtime')}: {formatRuntime(chapter.runtime)}
+                  {t("Serie_ChapterState_Runtime")}:{" "}
+                  {formatRuntime(chapter.runtime)}
                 </div>
               )}
             </div>
@@ -256,7 +256,7 @@ const DefaultState = ({
                   key={genreId}
                   className="text-black bg-gray-200 dark:bg-gray-700 dark:text-white"
                 >
-                  {getGenreName(genreId)}
+                  {t(`${genreId}`)}
                 </Badge>
               ))}
             </div>
@@ -269,7 +269,8 @@ const DefaultState = ({
               </div>
               {serie.vote_count && (
                 <span className="text-gray-700 dark:text-gray-300">
-                  ({serie.vote_count.toLocaleString()} {t('Serie_DefaultState_Votes')})
+                  ({serie.vote_count.toLocaleString()}{" "}
+                  {t("Serie_DefaultState_Votes")})
                 </span>
               )}
             </div>
@@ -279,7 +280,7 @@ const DefaultState = ({
                 onClick={onWatchNow}
               >
                 <PlayCircle className="w-4 h-4 mr-2" />
-                {t('Serie_DefaultState_WatchPromo')}
+                {t("Serie_DefaultState_WatchPromo")}
               </Button>
               <SeriesDropdown id={serie.id} watchChapter={watchChapter} />
             </div>
@@ -287,24 +288,27 @@ const DefaultState = ({
               {serie.first_air_date && (
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                 {t('Serie_DefaultState_FirstAirDate')}: {parseDate(serie.first_air_date)}
+                  {t("Serie_DefaultState_FirstAirDate")}:{" "}
+                  {parseDate(serie.first_air_date)}
                 </div>
               )}
               {serie.original_language && (
                 <div className="flex items-center">
                   <Globe className="w-4 h-4 mr-2" />
-                  {t('Serie_DefaultState_Language')}: {toUpper(serie.original_language)}
+                  {t("Serie_DefaultState_Language")}:{" "}
+                  {toUpper(serie.original_language)}
                 </div>
               )}
               {serie.popularity && (
                 <div className="flex items-center">
                   <ThumbsUp className="w-4 h-4 mr-2" />
-                  {t('Serie_DefaultState_Popularity')}: {serie.popularity.toFixed(2)}
+                  {t("Serie_DefaultState_Popularity")}:{" "}
+                  {serie.popularity.toFixed(2)}
                 </div>
               )}
               {serie.adult && (
                 <div className="flex items-center">
-                  <Badge>{t('AdultContent')}</Badge>
+                  <Badge>{t("AdultContent")}</Badge>
                 </div>
               )}
             </div>
