@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Tabs, Tab } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
-import { House, Search, Heart } from "lucide-react"; // Import the Heart icon for favorites
+import { House, Search, Heart } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
 
 type Key = "home" | "search" | "myFavorites";
 
@@ -11,8 +13,20 @@ const NAVIGATION_MAP: Record<Key, string> = {
   myFavorites: "/myFavorites",
 };
 
+const translationKeys: Record<Key, string> = {
+  home: "Navigation_Home",
+  search: "Navigation_Search",
+  myFavorites: "Navigation_MyFavorites",
+};
+
+const translateKeys = (t: TFunction<"translation", undefined>, key: Key) => {
+  return t(translationKeys[key]);
+};
+
 export default function NavBar() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const [selected, setSelected] = useState<Key>("home");
 
   useEffect(() => {
@@ -43,7 +57,7 @@ export default function NavBar() {
                 ) : (
                   <Heart className="w-4 h-4" />
                 )}
-                <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                <span>{translateKeys(t, key as Key)}</span>
               </div>
             }
           />

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Tooltip } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 import * as ChaptersWatchedLocalStorage from "../../toolkit/ChaptersWatchedLocalStorage";
 
@@ -14,6 +15,8 @@ type ChapterWatchedButtonProps = {
 };
 
 const ChapterWatchedButton = ({ item }: ChapterWatchedButtonProps) => {
+  const { t } = useTranslation();
+
   const [isWatched, setIsWatched] = useState(false);
 
   // Generate a unique key based on serieId, seasonId, and episodeId
@@ -51,11 +54,11 @@ const ChapterWatchedButton = ({ item }: ChapterWatchedButtonProps) => {
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         {isWatched ? (
-          <Tooltip content="Marked as watched">
+          <Tooltip content={t("Serie_ChapterState_EyeMarked")}>
             <Eye className="w-4 h-4 text-green-500" />
           </Tooltip>
         ) : (
-          <Tooltip content="Mark as watched">
+          <Tooltip content={t("Serie_ChapterState_MarkEye")}>
             <EyeOff className="w-4 h-4 text-black" />
           </Tooltip>
         )}

@@ -11,6 +11,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { chain, get, map, merge, range, toUpper } from "lodash";
+import { useTranslation } from "react-i18next";
 
 import { PromoResult, PromoReturnType, UniqueSerie } from "../../types";
 import { tvSeriesGenres } from "../../constants";
@@ -121,6 +122,8 @@ const ChapterState = ({
   onWatchNow,
   onBack,
 }: ChapterStateProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="max-h-screen overflow-y-auto text-black dark:text-white">
       <button
@@ -170,7 +173,7 @@ const ChapterState = ({
               </div>
               {chapter.vote_count && (
                 <span className="text-gray-700 dark:text-gray-300">
-                  ({chapter.vote_count.toLocaleString()} votes)
+                  ({chapter.vote_count.toLocaleString()} {t('Serie_ChapterState_Votes')})
                 </span>
               )}
             </div>
@@ -181,7 +184,7 @@ const ChapterState = ({
                   onClick={onWatchNow}
                 >
                   <PlayCircle className="w-4 h-4 mr-2" />
-                  Watch Now
+                  {t('Serie_ChapterState_WatchNow')}
                 </Button>
               </div>
             ) : null}
@@ -189,13 +192,13 @@ const ChapterState = ({
               {chapter.air_date && (
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  Air Date: {parseDate(chapter.air_date)}
+                  {t('Serie_ChapterState_AirDate')}: {parseDate(chapter.air_date)}
                 </div>
               )}
               {chapter.runtime && (
                 <div className="flex items-center">
                   <Clock className="w-4 h-4 mr-2" />
-                  Runtime: {formatRuntime(chapter.runtime)}
+                  {t('Serie_ChapterState_Runtime')}: {formatRuntime(chapter.runtime)}
                 </div>
               )}
             </div>
@@ -214,6 +217,8 @@ const DefaultState = ({
   onWatchNow,
   watchChapter,
 }: DefaultStateProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="max-h-screen overflow-y-auto text-black dark:text-white">
       {serie.backdrop_path ? (
@@ -264,7 +269,7 @@ const DefaultState = ({
               </div>
               {serie.vote_count && (
                 <span className="text-gray-700 dark:text-gray-300">
-                  ({serie.vote_count.toLocaleString()} votes)
+                  ({serie.vote_count.toLocaleString()} {t('Serie_DefaultState_Votes')})
                 </span>
               )}
             </div>
@@ -274,7 +279,7 @@ const DefaultState = ({
                 onClick={onWatchNow}
               >
                 <PlayCircle className="w-4 h-4 mr-2" />
-                Watch Promo
+                {t('Serie_DefaultState_WatchPromo')}
               </Button>
               <SeriesDropdown id={serie.id} watchChapter={watchChapter} />
             </div>
@@ -282,24 +287,24 @@ const DefaultState = ({
               {serie.first_air_date && (
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  First Air Date: {parseDate(serie.first_air_date)}
+                 {t('Serie_DefaultState_FirstAirDate')}: {parseDate(serie.first_air_date)}
                 </div>
               )}
               {serie.original_language && (
                 <div className="flex items-center">
                   <Globe className="w-4 h-4 mr-2" />
-                  Language: {toUpper(serie.original_language)}
+                  {t('Serie_DefaultState_Language')}: {toUpper(serie.original_language)}
                 </div>
               )}
               {serie.popularity && (
                 <div className="flex items-center">
                   <ThumbsUp className="w-4 h-4 mr-2" />
-                  Popularity: {serie.popularity.toFixed(2)}
+                  {t('Serie_DefaultState_Popularity')}: {serie.popularity.toFixed(2)}
                 </div>
               )}
               {serie.adult && (
                 <div className="flex items-center">
-                  <Badge>Adult Content</Badge>
+                  <Badge>{t('AdultContent')}</Badge>
                 </div>
               )}
             </div>
