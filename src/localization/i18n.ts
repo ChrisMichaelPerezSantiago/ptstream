@@ -1,13 +1,17 @@
 import i18n from 'i18next';
-import { map } from 'lodash';
+import { get, map, split } from 'lodash';
 import { initReactI18next } from 'react-i18next';
+
+const LANGUAGE_FOLDER = import.meta.glob('./*/index.ts');
 
 const DEFAULT_LANGUAGE = 'en';
 
-const languages = ['en', 'es', 'de', 'fr'];
-
 const loadTranslations = async () => {
   const resources: Record<string, any> = {};
+
+  const translationFiles = LANGUAGE_FOLDER
+
+  const languages = map(Object.keys(translationFiles), file => get(split(file, '/'), '[1]'));
 
   await Promise.all(
     map(languages, async (lang) => {
