@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -7,7 +7,7 @@ import {
   DropdownMenu,
 } from "@nextui-org/react";
 import { useSelector } from "react-redux";
-import { map, sortBy } from "lodash";
+import { chain, compact, map, size, sortBy } from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { RootState } from "../../redux/store";
@@ -31,6 +31,10 @@ const GenreSelector: React.FC<GenreSelectorProps> = React.memo(
       currentScene === "series" ? tvSeriesGenres : moviesGenres;
     const genresArray = Object.entries(genresObject);
     const reorderedGenres = sortBy(genresArray, ([id]) => (id === "0" ? 1 : 0));
+
+    const selectedKeys = useMemo(() => {
+      return selectedGenre ? map([selectedGenre], (key) => key.toString()) : [];
+    }, [selectedGenre]);
 
     const handleGenreChange = useCallback(
       (key: string | null) => {
@@ -56,8 +60,9 @@ const GenreSelector: React.FC<GenreSelectorProps> = React.memo(
             </Button>
           </DropdownTrigger>
           <DropdownMenu
-            selectedKeys={selectedGenre !== null ? [selectedGenre] : []}
+            selectedKeys={selectedKeys}
             onAction={handleGenreChange}
+            selectionMode="single"
             className="max-h-[300px] overflow-y-auto"
           >
             {map(reorderedGenres, ([id, genre]) => (
