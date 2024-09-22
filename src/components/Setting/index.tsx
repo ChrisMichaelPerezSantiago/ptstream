@@ -33,8 +33,15 @@ export default function Setting() {
       }}
     >
       <DropdownTrigger>
-        <Button variant="light" size="sm">
-          <Settings size={20} />
+        <Button
+          variant="light"
+          size="sm"
+          className="transition-transform duration-300 group hover:bg-transparent hover:shadow-none"
+        >
+          <Settings
+            size={20}
+            className="transition-transform duration-300 group-hover:rotate-[360deg]"
+          />
         </Button>
       </DropdownTrigger>
       <DropdownMenu className="max-h-[300px] overflow-y-auto">
@@ -51,9 +58,12 @@ export default function Setting() {
                 value={selectedLang}
                 onChange={handleChangeLanguage}
               >
-                <option value="en">🇺🇸 English</option>
-                <option value="es">🇪🇸 Español</option>
                 <option value="de">🇩🇪 Deutsch</option>
+                <option value="en" selected>
+                  🇺🇸 English
+                </option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="fr">🇫🇷 Français</option>
               </select>
             }
           >
