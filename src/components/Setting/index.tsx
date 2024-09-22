@@ -53,6 +53,7 @@ export default function Setting() {
               >
                 <option value="en">🇺🇸 English</option>
                 <option value="es">🇪🇸 Español</option>
+                <option value="de">🇩🇪 Deutsch</option>
               </select>
             }
           >

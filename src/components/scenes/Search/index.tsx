@@ -1,6 +1,7 @@
 import { useState, useCallback, Fragment } from "react";
 import { Chip, useDisclosure } from "@nextui-org/react";
 import { debounce, size } from "lodash";
+import { useTranslation } from "react-i18next";
 
 import useSearch from "../../../hooks/useSearch";
 import { SearchTableContainer } from "../../TableContainer";
@@ -8,34 +9,37 @@ import { ModalContainer } from "../../ModalContainer";
 import { MovieSection, SerieSection } from "../../Section";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
 
-const DefaultState = () => (
-  <div className="flex flex-col items-center justify-center text-center">
-    <div className="flex-col items-center">
-      <h2 className="mb-2 text-3xl font-semibold tracking-tight">
-        Start your search
-      </h2>
-    </div>
-    <p className="max-w-md mb-6 text-default-500">
-      Find what you're looking for by searching our extensive database of movies
-      and series.
-    </p>
-    <div className="text-sm text-default-500">
-      <p>Try searching for:</p>
-      <div className="flex flex-wrap justify-center gap-2 mt-2">
-        {[
-          "Harry Potter",
-          "The Lord of the Rings",
-          "Game of Thrones",
-          "Breaking Bad",
-        ].map((term) => (
-          <Chip key={term} variant="flat" color="default">
-            {term}
-          </Chip>
-        ))}
+const DefaultState = () => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="flex flex-col items-center justify-center text-center">
+      <div className="flex-col items-center">
+        <h2 className="mb-2 text-3xl font-semibold tracking-tight">
+          {t("Search_DefaultState_Text1")}
+        </h2>
+      </div>
+      <p className="max-w-md mb-6 text-default-500">
+        {t("Search_DefaultState_Text2")}
+      </p>
+      <div className="text-sm text-default-500">
+        <p>{t("Search_DefaultState_Text3")}</p>
+        <div className="flex flex-wrap justify-center gap-2 mt-2">
+          {[
+            "Harry Potter",
+            "The Lord of the Rings",
+            "Game of Thrones",
+            "Breaking Bad",
+          ].map((term) => (
+            <Chip key={term} variant="flat" color="default">
+              {term}
+            </Chip>
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function SerieScene() {
   const [records, setRecords] = useState([]);

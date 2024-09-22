@@ -2,6 +2,7 @@ import { useState, useCallback, Fragment, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useDisclosure } from "@nextui-org/react";
 import { unionBy, set, size } from "lodash";
+import { useTranslation } from "react-i18next";
 
 import { SerieResult, SerieReturnType, UniqueSerie } from "../../../types";
 import useSeries from "../../../hooks/useSeries";
@@ -12,11 +13,15 @@ import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
 import { GENRE_RESET_FILTER } from "../../../constants";
 
-const EmptyState = () => (
-  <div className="text-sm text-default-500">
-    <p>No series found</p>
-  </div>
-);
+const EmptyState = () => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="text-sm text-default-500">
+      <p>{t("Serie_EmptyState_Text1")}</p>
+    </div>
+  );
+};
 
 export default function SerieScene() {
   const [series, setSeries] = useState<SerieResult>([]);
