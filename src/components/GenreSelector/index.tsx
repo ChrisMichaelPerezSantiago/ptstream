@@ -8,6 +8,7 @@ import {
 } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { map, sortBy } from "lodash";
+import { useTranslation } from "react-i18next";
 
 import { RootState } from "../../redux/store";
 import { VerticalDotsIcon } from "../Icons/VerticalDotsIcon";
@@ -20,6 +21,8 @@ type GenreSelectorProps = {
 
 const GenreSelector: React.FC<GenreSelectorProps> = React.memo(
   ({ selectedGenre, onGenreChange }) => {
+    const { t } = useTranslation();
+
     const currentScene = useSelector(
       (state: RootState) => state.scene.currentScene
     );
@@ -63,7 +66,7 @@ const GenreSelector: React.FC<GenreSelectorProps> = React.memo(
                 value={id}
                 className={id === "0" ? "text-red-500" : ""}
               >
-                {genre}
+                {t(id)}
               </DropdownItem>
             ))}
           </DropdownMenu>
