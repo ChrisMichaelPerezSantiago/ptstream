@@ -59,9 +59,7 @@ export default function Setting() {
                 onChange={handleChangeLanguage}
               >
                 <option value="de">🇩🇪 Deutsch</option>
-                <option value="en" selected>
-                  🇺🇸 English
-                </option>
+                <option value="en">🇺🇸 English</option>
                 <option value="es">🇪🇸 Español</option>
                 <option value="fr">🇫🇷 Français</option>
               </select>
