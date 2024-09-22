@@ -4,7 +4,7 @@ import { initReactI18next } from 'react-i18next';
 
 const DEFAULT_LANGUAGE = 'en';
 
-const languages = ['en', 'es', 'de'];
+const languages = ['en', 'es', 'de', 'fr'];
 
 const loadTranslations = async () => {
   const resources: Record<string, any> = {};
