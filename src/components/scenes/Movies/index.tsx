@@ -2,6 +2,7 @@ import { useState, useCallback, Fragment, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDisclosure } from "@nextui-org/react";
 import { set, size, unionBy } from "lodash";
+import { useTranslation } from "react-i18next";
 
 import { MovieResult, MovieReturnType, UniqueMovie } from "../../../types";
 import useMovies from "../../../hooks/useMovies";
@@ -12,11 +13,15 @@ import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
 import { GENRE_RESET_FILTER } from "../../../constants";
 
-const EmptyState = () => (
-  <div className="text-sm text-default-500">
-    <p>No movies found</p>
-  </div>
-);
+const EmptyState = () => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="text-sm text-default-500">
+      <p>{t("Movie_EmptyState_Text1")}</p>
+    </div>
+  );
+};
 
 export default function MovieScene() {
   const [movies, setMovies] = useState<MovieResult>([]);

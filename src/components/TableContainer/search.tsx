@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { Spinner, Image, Input } from "@nextui-org/react";
 import { get, map, size, truncate } from "lodash";
+import { useTranslation } from "react-i18next";
 
 import { SerieResult, UniqueSerie } from "../../types";
 import { SearchIcon } from "../Icons/SearchIcon";
@@ -22,6 +23,8 @@ export const TableContainer = ({
   emptyContentLabel,
   isLoading,
 }: TableContainerProps) => {
+  const { t } = useTranslation();
+
   const renderUserCard = useCallback(
     (row: UniqueSerie) => {
       return (
@@ -60,7 +63,7 @@ export const TableContainer = ({
           <Input
             isClearable={isLoading ? false : true}
             className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
+            placeholder={t("Search_TableContent_Input_Placeholder")}
             startContent={<SearchIcon />}
             endContent={
               isLoading ? <Spinner size="sm" color="default" /> : null
@@ -70,7 +73,7 @@ export const TableContainer = ({
         </div>
       </div>
     );
-  }, [watchInputSearch, isLoading]);
+  }, [watchInputSearch, isLoading, t]);
 
   const DataState = () => (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

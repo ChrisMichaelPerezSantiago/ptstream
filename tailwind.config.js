@@ -12,6 +12,7 @@ module.exports = {
       animation: {
         "pip-drop-effect": "pipDropEffect 1s ease-out",
         "iframe-drop-effect": "iframeDropEffect 1s ease-out",
+        "spin-setting-icon": "spinSettingIcon 1s linear forwards",
       },
       keyframes: {
         pipDropEffect: {
@@ -48,6 +49,14 @@ module.exports = {
           "100%": {
             transform: "scale(1)",
             opacity: "1",
+          },
+        },
+        spinSettingIcon: {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
           },
         },
       },
