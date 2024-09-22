@@ -8,6 +8,7 @@ import {
   User,
 } from "@nextui-org/react";
 import { chain, get, map, size } from "lodash";
+import { useTranslation } from "react-i18next";
 
 import useGetSeasonById from "../../hooks/useGetSeasonById";
 import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
@@ -24,6 +25,8 @@ export default function SeriesDropdown({
   id,
   watchChapter,
 }: SeriesDropdownProps) {
+  const { t } = useTranslation();
+
   const [seasons, setSeasons] = useState<Seasons>([]);
   const [chapters, setChapters] = useState<any>(null);
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState<number>();
@@ -91,14 +94,18 @@ export default function SeriesDropdown({
             variant="bordered"
             endContent={<ChevronDownIcon className="text-xl" />}
           >
-            {selectedSeason ? selectedSeason.name : "Seasons"}
+            {selectedSeason
+              ? selectedSeason.name
+              : t("Serie_DefaultState_SeasonSelectLabel")}
           </Button>
         </DropdownTrigger>
         <DropdownMenu variant="faded" className="overflow-y-auto max-h-60">
           {map(seasons, (season, index) => (
             <DropdownItem
               key={season.id}
-              description={`${season.episode_count} episodes`}
+              description={`${season.episode_count} ${t(
+                "Serie_DefaultState_SeasonTotalEpisodesLabel"
+              )}`}
               startContent={
                 <User
                   avatarProps={{
@@ -123,7 +130,9 @@ export default function SeriesDropdown({
               variant="bordered"
               endContent={<ChevronDownIcon className="text-xl" />}
             >
-              {selectedChapterNumber ? selectedChapterNumber : "Chapters"}
+              {selectedChapterNumber
+                ? selectedChapterNumber
+                : t("Serie_DefaultState_ChapterSelectLabel")}
             </Button>
           </DropdownTrigger>
           <DropdownMenu variant="faded" className="overflow-y-auto max-h-60">

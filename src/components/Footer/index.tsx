@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { GithubIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function Footer() {
+  const { t } = useTranslation();
+
   const currentYear = new Date().getFullYear();
   const [isVisible, setIsVisible] = useState(false);
 
@@ -22,7 +25,7 @@ export function Footer() {
     >
       <div className="container flex items-center justify-between mx-auto">
         <p className="text-sm text-gray-700">
-          &copy; {currentYear} Ptstream. All rights reserved.
+          &copy; {currentYear} {t("Copyright")}
         </p>
         <a
           href={"https://github.com/ChrisMichaelPerezSantiago/ptstream"}

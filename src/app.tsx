@@ -9,6 +9,7 @@ import {
 import { createRoot } from "react-dom/client";
 import { NextUIProvider, Switch } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
+import { I18nextProvider } from "react-i18next";
 
 import Root from "./scenes/root";
 import TvIcon from "./components/Icons/TvIcon";
@@ -19,10 +20,11 @@ import { setScene } from "./redux/scenes/sceneSlice";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import GenreSelector from "./components/GenreSelector";
-import { LanguageProvider } from "./contexts/LanguageContext";
+import Setting from "./components/Setting";
 import { AppDispatch, RootState, store } from "./redux/store";
 import { Scene, SceneProps } from "./types";
 import { setGenre } from "./redux/genre/genreSlice";
+import i18n from "./localization/i18n";
 
 import "./index.css";
 
@@ -87,19 +89,9 @@ function App() {
               onGenreChange={handleGenreChange}
             />
           ) : null}
-          {/* <Switch
-            checked={resolvedTheme === "light"} // Show light mode selected by default
-            size="md"
-            color="primary"
-            onChange={(e) => setTheme(e.target.checked ? "dark" : "light")} // Switch to dark mode if toggled
-            thumbIcon={({ isSelected, className }) =>
-              isSelected ? (
-                <SunIcon className={className} /> // Show Sun icon when light mode is selected
-              ) : (
-                <MoonIcon className={className} /> // Show Moon icon when dark mode is selected
-              )
-            }
-          /> */}
+          <div className="ml-10">
+            <Setting />
+          </div>
         </div>
       </header>
       <main className="p-4">
@@ -120,13 +112,13 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <NextThemesProvider attribute="class" defaultTheme="light">
         <Provider store={store}>
-          <LanguageProvider>
+          <I18nextProvider i18n={i18n}>
             <Router>
               <div className="px-2 mx-1 sm:mx-2 lg:mx-4">
                 <App />
               </div>
             </Router>
-          </LanguageProvider>
+          </I18nextProvider>
         </Provider>
       </NextThemesProvider>
     </QueryClientProvider>

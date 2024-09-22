@@ -10,6 +10,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { map, merge, range, toUpper } from "lodash";
+import { useTranslation } from "react-i18next";
 
 import { PromoResult, PromoReturnType, UniqueMovie } from "../../types";
 import { moviesGenres } from "../../constants";
@@ -96,6 +97,8 @@ const DefaultState = ({
   onWatchNow,
   onWatchPromo,
 }: DefaultStateProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="max-h-screen overflow-y-auto text-black dark:text-white">
       {movie.backdrop_path ? (
@@ -146,7 +149,7 @@ const DefaultState = ({
               </div>
               {movie.vote_count && (
                 <span className="text-gray-700 dark:text-gray-300">
-                  ({movie.vote_count.toLocaleString()} votes)
+                  ({movie.vote_count.toLocaleString()} {t('Movie_DefaultState_Votes')})
                 </span>
               )}
             </div>
@@ -156,38 +159,38 @@ const DefaultState = ({
                 onClick={onWatchNow}
               >
                 <PlayCircle className="w-4 h-4 mr-2" />
-                Watch Now
+               {t('Movie_ChapterState_WatchNow')}
               </Button>
               <Button
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
                 onClick={onWatchPromo}
               >
                 <PlayCircle className="w-4 h-4 mr-2" />
-                Watch Promo
+                {t('Movie_DefaultState_WatchPromo')}
               </Button>
             </div>
             <div className="grid grid-cols-2 gap-4 text-sm">
               {movie.release_date && (
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  Release Date: {parseDate(movie.release_date)}
+                  {t('Movie_DefaultState_ReleaseDate')}: {parseDate(movie.release_date)}
                 </div>
               )}
               {movie.original_language && (
                 <div className="flex items-center">
                   <Globe className="w-4 h-4 mr-2" />
-                  Language: {toUpper(movie.original_language)}
+                  {t('Movie_DefaultState_Language')}: {toUpper(movie.original_language)}
                 </div>
               )}
               {movie.popularity && (
                 <div className="flex items-center">
                   <ThumbsUp className="w-4 h-4 mr-2" />
-                  Popularity: {movie.popularity.toFixed(2)}
+                  {t('Movie_DefaultState_Popularity')}: {movie.popularity.toFixed(2)}
                 </div>
               )}
               {movie.adult && (
                 <div className="flex items-center">
-                  <Badge>Adult Content</Badge>
+                  <Badge>{t('AdultContent')}</Badge>
                 </div>
               )}
             </div>
