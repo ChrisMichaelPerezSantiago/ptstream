@@ -1,10 +1,12 @@
 import { useCallback, useMemo } from "react";
-import { Spinner, Image, Input } from "@nextui-org/react";
+import { Spinner, Image, Input, Chip } from "@nextui-org/react";
 import { get, map, size, truncate } from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { SerieResult, UniqueSerie } from "../../types";
 import { SearchIcon } from "../Icons/SearchIcon";
+import TvIcon from "../Icons/TvIcon";
+import MovieIcon from "../Icons/MovieIcon";
 
 type TableContainerProps = {
   rows: SerieResult;
@@ -27,18 +29,45 @@ export const TableContainer = ({
 
   const renderUserCard = useCallback(
     (row: UniqueSerie) => {
+      const mediaType = get(row, "media_type", null);
+
       return (
         <div
           className="flex items-start p-4 transition-colors cursor-pointer hover:bg-gray-100"
           onClick={() => handleOpenModal(row)}
         >
-          <Image
-            alt={get(row, "name", null) || get(row, "title", null)}
-            className="object-cover rounded-lg"
-            height={120}
-            width={80}
-            src={`https://image.tmdb.org/t/p/w185${get(row, "poster_path")}`}
-          />
+          {/* Image and Media Type Label */}
+          <div className="flex-shrink-0">
+            <Image
+              alt={get(row, "name", null) || get(row, "title", null)}
+              className="object-cover rounded-lg"
+              height={120}
+              width={80}
+              src={`https://image.tmdb.org/t/p/w185${get(row, "poster_path")}`}
+            />
+            {/* Media Type Label Below Image */}
+            <div className="mt-2 text-center">
+              {mediaType === "tv" ? (
+                <Chip
+                  className="flex items-center px-3 py-1 text-xs font-medium rounded-lg"
+                  variant="flat"
+                  avatar={<TvIcon />}
+                >
+                  Serie
+                </Chip>
+              ) : (
+                <Chip
+                  className="flex items-center px-3 py-1 text-xs font-medium rounded-lg"
+                  variant="flat"
+                  avatar={<MovieIcon />}
+                >
+                  Movie
+                </Chip>
+              )}
+            </div>
+          </div>
+
+          {/* Content (Title and Overview) */}
           <div className="flex-1 ml-4">
             <p className="font-semibold text-gray-800 text-md">
               {get(row, "name", null) || get(row, "title", null)}
