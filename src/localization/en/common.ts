@@ -30,6 +30,8 @@ export default {
   "Search_DefaultState_Text2": "Find what you're looking for by searching our extensive database of movies and series.",
   "Search_DefaultState_Text3": "Try searching for:",
   "Search_TableContent_Input_Placeholder": "Search by name...",
+  "Search_TableContent_MediaTypeSerie": "Series",
+  "Search_TableContent_MediaTypeMovie": "Movie",
   "MyFavorites_DefaultState_Text1": " Discover Your Favorite Movies & Series",
   "MyFavorites_DefaultState_Text2": "You haven't added any favorite movies or series yet. Start by searching our extensive database and find your next favorite.",
   "MyFavorites_DefaultState_Text3": "Need inspiration? Try searching for:",
