@@ -53,7 +53,7 @@ export const TableContainer = ({
                   variant="flat"
                   avatar={<TvIcon />}
                 >
-                  Serie
+                  {t("Search_TableContent_MediaTypeSerie")}
                 </Chip>
               ) : (
                 <Chip
@@ -61,7 +61,7 @@ export const TableContainer = ({
                   variant="flat"
                   avatar={<MovieIcon />}
                 >
-                  Movie
+                  {t("Search_TableContent_MediaTypeMovie")}
                 </Chip>
               )}
             </div>
