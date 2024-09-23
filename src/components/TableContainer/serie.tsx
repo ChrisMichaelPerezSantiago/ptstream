@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { Button, Spinner, Image } from "@nextui-org/react";
+import { useCallback, useEffect } from "react";
+import { Spinner, Image } from "@nextui-org/react";
 import { map, size, throttle, truncate } from "lodash";
 
 import { SerieResult, UniqueSerie } from "../../types";
@@ -56,21 +56,6 @@ export const TableContainer = ({
     [handleOpenModal]
   );
 
-  const bottomContent = useMemo(() => {
-    return hasMore && !isLoading ? (
-      <div className="flex justify-center w-full mt-4">
-        <Button
-          isDisabled={isLoading}
-          variant="flat"
-          onPress={() => watchPage(page + 1)}
-        >
-          {isLoading && <Spinner color="default" size="sm" />}
-          Load More
-        </Button>
-      </div>
-    ) : null;
-  }, [isLoading, page, totalRecords, watchPage]);
-
   // Scroll event listener
   useEffect(() => {
     const handleScroll = throttle(() => {
@@ -104,7 +89,6 @@ export const TableContainer = ({
         {isLoading && <Spinner color="default" size="sm" />}
         {size(rows) > 0 ? <DataState /> : <EmptyState />}
       </div>
-      {bottomContent}
     </div>
   );
 };
