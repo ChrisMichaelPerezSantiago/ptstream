@@ -66,4 +66,5 @@ export default {
   "10766": "Soap",
   "10767": "Talk",
   "10768": "War & Politics",
+  "Scene_NotFound": "Scene not found.",
 }

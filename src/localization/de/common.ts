@@ -65,5 +65,6 @@ export default {
   "10765": "Sci-Fi & Fantasy",
   "10766": "Seifenoper",
   "10767": "Talkshow",
-  "10768": "Krieg & Politik"
+  "10768": "Krieg & Politik",
+  "Scene_NotFound": "Szene nicht gefunden.",
 }

@@ -65,5 +65,6 @@ export default {
   "10765": "Ciencia Ficción y Fantasía",
   "10766": "Telenovela",
   "10767": "Charlas",
-  "10768": "Guerra y Política"
+  "10768": "Guerra y Política",
+  "Scene_NotFound": "Escena no encontrado.",
 }
