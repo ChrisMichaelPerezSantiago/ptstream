@@ -3,6 +3,8 @@ import { createLogger } from 'redux-logger';
 
 import sceneReducer from './scenes/sceneSlice';
 import genreReducer from './genre/genreSlice';
+import searchReducer from './search/searchSlice';
+import inputSearchReducer from './inputSearch/inputSearchSlice';
 
 const logger = createLogger({
   collapsed: true,
@@ -14,7 +16,8 @@ export const store = configureStore({
   reducer: {
     scene: sceneReducer,
     genre: genreReducer,
-
+    search: searchReducer,
+    inputSearch: inputSearchReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
