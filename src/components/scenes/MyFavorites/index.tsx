@@ -1,6 +1,6 @@
 import { useState, Fragment, useEffect } from "react";
 import { Chip, useDisclosure } from "@nextui-org/react";
-import { filter, includes, map, size } from "lodash";
+import { filter, get, includes, map, size } from "lodash";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -10,8 +10,7 @@ import { MovieSection, SerieSection } from "../../Section";
 import * as MyFavLocalStorage from "../../../toolkit/MyFavLocalStorage";
 import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
-
-type MediaType = "movie" | "tv";
+import { MediaType } from "../../../types";
 
 const DefaultState = () => {
   const { t } = useTranslation();
@@ -119,7 +118,10 @@ export default function MyFavoriteScene() {
           size="full"
           isOpen={isOpen}
           onClose={onClose}
-          bodyContent={content[record.media_type].component}
+          bodyContent={
+            get(content, [get(record, "media_type")], { component: null })
+              .component
+          }
           children={null}
         />
       ) : null}
