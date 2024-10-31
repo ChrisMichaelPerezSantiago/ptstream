@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../redux/store";
 import { resetSearchState, setPage, setRecord, setRecords, setTotalRecords } from "../redux/search/searchSlice";
-import { setSearchQuery } from "../redux/inputSearch/inputSearchSlice";
+import { clearSearchQuery, setSearchQuery } from "../redux/inputSearch/inputSearchSlice";
 
 const useSearchState = () => {
   const dispatch = useDispatch();
@@ -39,13 +39,18 @@ const useSearchState = () => {
     [dispatch]
   );
 
+  const updateclearSearchQuery = useCallback(
+    () => dispatch(clearSearchQuery()),
+    [dispatch]
+  );
+
   const clearSearchState = useCallback(() => {
     dispatch(resetSearchState());
     updateRecords([]);
     updateTotalRecords(0);
     updatePage(1);
     updateRecord(null);
-    updateSearchQuery("");
+    updateclearSearchQuery()
   }, [dispatch]);
 
   return {
