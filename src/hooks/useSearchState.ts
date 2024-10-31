@@ -45,6 +45,7 @@ const useSearchState = () => {
     updateTotalRecords(0);
     updatePage(1);
     updateRecord(null);
+    updateSearchQuery("");
   }, [dispatch]);
 
   return {
