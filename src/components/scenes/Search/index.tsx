@@ -1,37 +1,51 @@
-import { useState, useCallback, Fragment } from "react";
+import { Fragment } from "react";
 import { Chip, useDisclosure } from "@nextui-org/react";
-import { debounce, size } from "lodash";
+import { map, size, update } from "lodash";
 import { useTranslation } from "react-i18next";
 
-import useSearch from "../../../hooks/useSearch";
 import { SearchTableContainer } from "../../TableContainer";
 import { ModalContainer } from "../../ModalContainer";
 import { MovieSection, SerieSection } from "../../Section";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
+import useSearchHandler from "../../../hooks/useSearchHandler";
+import { MediaType } from "../../../types";
+import useSearchState from "../../../hooks/useSearchState";
 
-const DefaultState = () => {
+const defaultSearchTerms = [
+  "Harry Potter",
+  "The Lord of the Rings",
+  "Game of Thrones",
+  "Breaking Bad",
+];
+
+const DefaultState = ({
+  terms,
+  onSelectTerm,
+}: {
+  terms: string[];
+  onSelectTerm: (term: string) => void;
+}) => {
   const { t } = useTranslation();
 
   return (
     <div className="flex flex-col items-center justify-center text-center">
-      <div className="flex-col items-center">
-        <h2 className="mb-2 text-3xl font-semibold tracking-tight">
-          {t("Search_DefaultState_Text1")}
-        </h2>
-      </div>
+      <h2 className="mb-2 text-3xl font-semibold tracking-tight">
+        {t("Search_DefaultState_Text1")}
+      </h2>
       <p className="max-w-md mb-6 text-default-500">
         {t("Search_DefaultState_Text2")}
       </p>
       <div className="text-sm text-default-500">
         <p>{t("Search_DefaultState_Text3")}</p>
         <div className="flex flex-wrap justify-center gap-2 mt-2">
-          {[
-            "Harry Potter",
-            "The Lord of the Rings",
-            "Game of Thrones",
-            "Breaking Bad",
-          ].map((term) => (
-            <Chip key={term} variant="flat" color="default">
+          {map(terms, (term) => (
+            <Chip
+              key={term}
+              className="transition duration-300 cursor-pointer"
+              variant="flat"
+              color="default"
+              onClick={() => onSelectTerm(term)}
+            >
               {term}
             </Chip>
           ))}
@@ -41,55 +55,55 @@ const DefaultState = () => {
   );
 };
 
-export default function SerieScene() {
-  const [records, setRecords] = useState([]);
-  const [totalRecords, setTotalRecords] = useState<number>();
-  const [page, setPage] = useState<number>(1);
-  const [record, setRecord] = useState();
+const ModalContent = ({
+  mediaType,
+  record,
+}: {
+  mediaType: MediaType;
+  record: any;
+}) => {
+  const scenes = {
+    movie: <MovieSection item={record} />,
+    tv: <SerieSection item={record} />,
+  };
 
+  return scenes[mediaType] || null;
+};
+
+const SerieScene = () => {
+  const {
+    records,
+    totalRecords,
+    page,
+    record,
+    updateRecords,
+    updateTotalRecords,
+    updatePage,
+    updateRecord,
+  } = useSearchState();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { updateSearchQuery } = useSearchState();
 
   const showScrollToTop = size(records) >= 100;
 
-  const { mutate: mutateSearch, status } = useSearch({
-    onSuccess: (data) => {
-      setRecords(data.results);
-      setPage(data.page);
-      setTotalRecords(data.total_pages);
+  const { isLoading } = useSearchHandler(
+    (data) => {
+      updateRecords(data.results);
+      updatePage(data.page);
+      updateTotalRecords(data.total_pages);
     },
-    onError: (error: Error) => {
-      console.error("[useSeries] error", error);
-    },
-  });
+    (searchQuery: string) => {
+      updateSearchQuery(searchQuery);
+    }
+  );
 
-  const handleOpenModal = (recordSelected) => {
-    setRecord(recordSelected);
+  const handleOpenModal = (recordSelected: any) => {
+    updateRecord(recordSelected);
     onOpen();
   };
 
-  const watchInputSearch = useCallback(
-    debounce((searchQuery: string) => {
-      if (!searchQuery.trim()) {
-        setRecords([]);
-        setPage(1);
-        setTotalRecords(0);
-        return;
-      }
-      mutateSearch({ q: searchQuery });
-    }, 500),
-    [mutateSearch]
-  );
-
-  const isLoading = status === "pending";
-
-  const scenes = {
-    movie: {
-      component: <MovieSection item={record} />,
-    },
-    tv: {
-      component: <SerieSection item={record} />,
-    },
-  };
+  const handleSelectTerm = (term: string) => updateSearchQuery(term);
 
   return (
     <Fragment>
@@ -98,22 +112,30 @@ export default function SerieScene() {
         rows={records}
         totalRecords={totalRecords}
         page={page}
-        watchInputSearch={watchInputSearch}
         handleOpenModal={handleOpenModal}
-        emptyContentLabel={<DefaultState />}
+        emptyContentLabel={
+          <DefaultState
+            terms={defaultSearchTerms}
+            onSelectTerm={handleSelectTerm}
+          />
+        }
       />
 
-      {showScrollToTop ? <ScrollToTopButton /> : null}
+      {showScrollToTop && <ScrollToTopButton />}
 
       {record ? (
         <ModalContainer
           size="full"
           isOpen={isOpen}
           onClose={onClose}
-          bodyContent={scenes[record.media_type].component}
+          bodyContent={
+            <ModalContent mediaType={record["media_type"]} record={record} />
+          }
           children={null}
         />
       ) : null}
     </Fragment>
   );
-}
+};
+
+export default SerieScene;

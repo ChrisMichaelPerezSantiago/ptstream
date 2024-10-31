@@ -12,6 +12,9 @@ export type SceneProps = {
 
 export type Scene = "series" | "movies";
 
+export type MediaType = "movie" | "tv";
+
+
 const MovieFilterSchema = Schema.Struct({
   page: Schema.Number,
   sort_by: Schema.optional(Schema.String),

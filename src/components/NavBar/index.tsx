@@ -5,6 +5,8 @@ import { House, Search, Heart } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
 
+import useSearchState from "../../hooks/useSearchState";
+
 type Key = "home" | "search" | "myFavorites";
 
 const NAVIGATION_MAP: Record<Key, string> = {
@@ -29,12 +31,15 @@ export default function NavBar() {
 
   const [selected, setSelected] = useState<Key>("home");
 
+  const { clearSearchState } = useSearchState();
+
   useEffect(() => {
     navigate(NAVIGATION_MAP[selected]);
   }, [selected]);
 
   const handleSelectionChange = (key: Key) => {
     setSelected(key);
+    clearSearchState();
   };
 
   return (

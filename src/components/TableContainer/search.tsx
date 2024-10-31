@@ -1,19 +1,19 @@
 import { useCallback, useMemo } from "react";
 import { Spinner, Image, Input, Chip } from "@nextui-org/react";
-import { get, map, size, truncate } from "lodash";
 import { useTranslation } from "react-i18next";
+import { get, map, size, truncate } from "lodash";
 
 import { SerieResult, UniqueSerie } from "../../types";
 import { SearchIcon } from "../Icons/SearchIcon";
 import TvIcon from "../Icons/TvIcon";
 import MovieIcon from "../Icons/MovieIcon";
+import useSearchState from "../../hooks/useSearchState";
 
 type TableContainerProps = {
   rows: SerieResult;
   totalRecords: number;
   page: number;
   handleOpenModal: (recordSelected: UniqueSerie) => void;
-  watchInputSearch: (query: string) => void;
   emptyContentLabel: JSX.Element;
   isLoading?: boolean;
 };
@@ -21,11 +21,16 @@ type TableContainerProps = {
 export const TableContainer = ({
   rows,
   handleOpenModal,
-  watchInputSearch,
   emptyContentLabel,
   isLoading,
 }: TableContainerProps) => {
   const { t } = useTranslation();
+
+  const {
+    inputValue: term,
+    clearSearchState,
+    updateSearchQuery,
+  } = useSearchState();
 
   const renderUserCard = useCallback(
     (row: UniqueSerie) => {
@@ -82,7 +87,7 @@ export const TableContainer = ({
         </div>
       );
     },
-    [handleOpenModal]
+    [handleOpenModal, t]
   );
 
   const topContent = useMemo(() => {
@@ -97,12 +102,14 @@ export const TableContainer = ({
             endContent={
               isLoading ? <Spinner size="sm" color="default" /> : null
             }
-            onValueChange={(value) => watchInputSearch(value)}
+            value={term}
+            onValueChange={(value) => updateSearchQuery(value)}
+            onClear={() => clearSearchState()}
           />
         </div>
       </div>
     );
-  }, [watchInputSearch, isLoading, t]);
+  }, [isLoading, term, t]);
 
   const DataState = () => (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
