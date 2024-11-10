@@ -71,39 +71,34 @@ const ModalContent = ({
 };
 
 const SerieScene = () => {
-  const {
-    records,
-    totalRecords,
-    page,
-    record,
-    updateRecords,
-    updateTotalRecords,
-    updatePage,
-    updateRecord,
-  } = useSearchState();
+  const searchState = useSearchState();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { updateSearchQuery } = useSearchState();
+  const records = searchState.get("records");
+  const record = searchState.get("record");
+  const totalRecords = searchState.get("totalRecords");
+  const page = searchState.get("page");
 
   const showScrollToTop = size(records) >= 100;
 
   const { isLoading } = useSearchHandler(
     (data) => {
-      updateRecords(data.results);
-      updatePage(data.page);
-      updateTotalRecords(data.total_pages);
+      searchState.set("records", data.results);
+      searchState.set("page", data.page);
+      searchState.set("totalRecords", data.total_pages);
     },
     (searchQuery: string) => {
-      updateSearchQuery(searchQuery);
+      searchState.set("inputValue", searchQuery);
     }
   );
 
   const handleOpenModal = (recordSelected: any) => {
-    updateRecord(recordSelected);
+    searchState.set("record", recordSelected);
     onOpen();
   };
 
-  const handleSelectTerm = (term: string) => updateSearchQuery(term);
+  const handleSelectTerm = (term: string) =>
+    searchState.set("inputValue", term);
 
   return (
     <Fragment>

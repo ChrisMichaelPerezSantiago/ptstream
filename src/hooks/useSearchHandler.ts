@@ -8,7 +8,9 @@ const useSearchHandler = (
   onSuccess: (data: any) => void,
   watchInputSearch: (searchQuery: string) => void
 ) => {
-  const { inputValue } = useSearchState();
+  const searchState = useSearchState();
+
+  const inputValue = searchState.get("inputValue")
 
   const { mutate: mutateSearch, status } = useSearch({
     onSuccess,
