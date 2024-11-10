@@ -26,11 +26,9 @@ export const TableContainer = ({
 }: TableContainerProps) => {
   const { t } = useTranslation();
 
-  const {
-    inputValue: term,
-    clearSearchState,
-    updateSearchQuery,
-  } = useSearchState();
+  const searchState = useSearchState();
+
+  const term = searchState.get("inputValue");
 
   const renderUserCard = useCallback(
     (row: UniqueSerie) => {
@@ -103,8 +101,8 @@ export const TableContainer = ({
               isLoading ? <Spinner size="sm" color="default" /> : null
             }
             value={term}
-            onValueChange={(value) => updateSearchQuery(value)}
-            onClear={() => clearSearchState()}
+            onValueChange={(value) => searchState.set("inputValue", value)}
+            onClear={() => searchState.clear()}
           />
         </div>
       </div>

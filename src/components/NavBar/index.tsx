@@ -31,7 +31,7 @@ export default function NavBar() {
 
   const [selected, setSelected] = useState<Key>("home");
 
-  const { clearSearchState } = useSearchState();
+  const searchState = useSearchState();
 
   useEffect(() => {
     navigate(NAVIGATION_MAP[selected]);
@@ -39,7 +39,7 @@ export default function NavBar() {
 
   const handleSelectionChange = (key: Key) => {
     setSelected(key);
-    clearSearchState();
+    searchState.clear();
   };
 
   return (
