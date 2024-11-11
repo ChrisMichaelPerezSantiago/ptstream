@@ -5,6 +5,7 @@ import sceneReducer from './scenes/sceneSlice';
 import genreReducer from './genre/genreSlice';
 import searchReducer from './search/searchSlice';
 import inputSearchReducer from './inputSearch/inputSearchSlice';
+import seasonReducer from './season/seasonSlice';
 
 const logger = createLogger({
   collapsed: true,
@@ -18,6 +19,7 @@ export const store = configureStore({
     genre: genreReducer,
     search: searchReducer,
     inputSearch: inputSearchReducer,
+    season: seasonReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });

@@ -12,6 +12,7 @@ import { SerieSection } from "../../Section";
 import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
 import { GENRE_RESET_FILTER } from "../../../constants";
+import useSeasonSelected from "../../../hooks/useSeasonSelected";
 
 const EmptyState = () => {
   const { t } = useTranslation();
@@ -37,7 +38,14 @@ export default function SerieScene() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const selectedSeasonState = useSeasonSelected();
+
   const showScrollToTop = size(series) >= 100;
+
+  const handleCloseModal = () => {
+    selectedSeasonState.clear();
+    onClose();
+  };
 
   const handleOpenModal = (recordSelected: UniqueSerie) => {
     setRecord(recordSelected);
@@ -106,7 +114,7 @@ export default function SerieScene() {
       <ModalContainer
         size="full"
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleCloseModal}
         bodyContent={<SerieSection item={record} />}
         children={null}
       />

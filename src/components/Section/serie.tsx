@@ -10,7 +10,7 @@ import {
   ThumbsUp,
   ArrowLeft,
 } from "lucide-react";
-import { chain, get, map, merge, range, toUpper } from "lodash";
+import { chain, defaultTo, get, map, merge, range, toUpper } from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { PromoResult, PromoReturnType, UniqueSerie } from "../../types";
@@ -22,6 +22,7 @@ import Banner from "../Banner";
 import PlyrVideoPlayer from "../PlyrVideoPlayer";
 import FavoriteButton from "../FavoriteButton";
 import ChapterWatchedButton from "../ChapterWatchedButton";
+import useSeasonSelected from "../../hooks/useSeasonSelected";
 
 type SerieSectionProps = {
   item: UniqueSerie;
@@ -219,6 +220,14 @@ const DefaultState = ({
 }: DefaultStateProps) => {
   const { t } = useTranslation();
 
+  const seasonSelectedState = useSeasonSelected();
+  const seasonSelected = seasonSelectedState.get("seasonSelected");
+
+  const posterPath = defaultTo(
+    get(seasonSelected, "poster_path"),
+    get(serie, "poster_path", null)
+  );
+
   return (
     <div className="max-h-screen overflow-y-auto text-black dark:text-white">
       {serie.backdrop_path ? (
@@ -227,10 +236,10 @@ const DefaultState = ({
 
       <div className="container px-4 py-8">
         <div className="flex gap-8 lg:gap-16">
-          {serie.poster_path ? (
+          {posterPath ? (
             <div className="flex-none w-1/3 lg:w-1/4">
               <Image
-                src={"https://image.tmdb.org/t/p/w1280" + serie.poster_path}
+                src={"https://image.tmdb.org/t/p/w1280" + posterPath}
                 alt={serie.name}
                 className="w-full h-auto rounded-lg shadow-lg"
               />
@@ -330,12 +339,15 @@ export const Section = ({ item }: SerieSectionProps) => {
   const [promo, setPromo] = useState<PromoResult>();
   const serie = item;
 
+  const seasonSelectedState = useSeasonSelected();
+
   const handleBack = () => {
     setWatchNow(false);
   };
 
   const handleBackToSeason = () => {
     setBackToSeason(true);
+    seasonSelectedState.clear();
   };
 
   const { mutate: mutateChapter } = useGetChapterBySeasonId({
