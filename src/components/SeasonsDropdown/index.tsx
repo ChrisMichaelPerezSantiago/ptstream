@@ -15,6 +15,7 @@ import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
 import { Seasons, SerieSeasonsResult, UniqueSerieSeason } from "../../types";
 import useGetChapterBySeasonId from "../../hooks/useGetChapterBySeasonId";
 import { parseDate } from "../../toolkit/serie";
+import useSeasonSelected from "../../hooks/useSeasonSelected";
 
 type SeriesDropdownProps = {
   id: number;
@@ -32,6 +33,8 @@ export default function SeriesDropdown({
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState<number>();
   const [selectedSeason, setSelectedSeason] = useState<UniqueSerieSeason>(null);
   const [selectedChapterNumber, setSelectedChapterNumber] = useState<number>();
+
+  const seasonSelectedState = useSeasonSelected();
 
   const { mutate: mutateSeasons } = useGetSeasonById({
     onSuccess: (data: SerieSeasonsResult) => {
@@ -61,6 +64,7 @@ export default function SeriesDropdown({
 
   useEffect(() => {
     if (selectedSeason) {
+      seasonSelectedState.set("seasonSelected", selectedSeason);
       mutateChapter({
         serieId: id,
         seasonId: selectedSeasonIndex,
