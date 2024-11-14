@@ -9,6 +9,8 @@ import {
   Globe,
   ThumbsUp,
   ArrowLeft,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import { chain, defaultTo, get, map, merge, range, toUpper } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -23,6 +25,7 @@ import PlyrVideoPlayer from "../PlyrVideoPlayer";
 import FavoriteButton from "../FavoriteButton";
 import ChapterWatchedButton from "../ChapterWatchedButton";
 import useSeasonSelected from "../../hooks/useSeasonSelected";
+import { useFullscreen } from "../../hooks/useFullscreen";
 
 type SerieSectionProps = {
   item: UniqueSerie;
@@ -73,18 +76,30 @@ const StreamingVideo = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isFloating] = useState(true);
 
+  const { toggleFullscreen, isFullscreen } = useFullscreen();
+
   const onLoad = () => setIsLoading(false);
 
   const src = `https://vidsrc.pro/embed/tv/${serieId}/${seasonId}/${episodeId}`;
 
   return (
     <div className="fixed inset-0 text-black bg-black dark:text-white">
-      <div className="absolute z-10 top-4 right-4">
+      <div className="absolute z-10 flex gap-2 top-4 right-4">
         <button
           onClick={onBack}
           className="flex items-center justify-center w-8 h-8 p-1 text-white transition-colors border rounded-full bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20"
         >
           <ArrowLeft className="w-4 h-4 text-white" />
+        </button>
+        <button
+          onClick={() => toggleFullscreen()}
+          className="flex items-center justify-center w-8 h-8 p-1 text-white transition-colors border rounded-full bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20"
+        >
+          {isFullscreen ? (
+            <Minimize2 className="w-4 h-4 text-white" />
+          ) : (
+            <Maximize2 className="w-4 h-4 text-white" />
+          )}
         </button>
       </div>
 
