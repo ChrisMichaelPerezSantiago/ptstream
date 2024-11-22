@@ -85,10 +85,15 @@ export const TableContainer = ({
 
   return (
     <div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {isLoading && <Spinner color="default" size="sm" />}
-        {size(rows) > 0 ? <DataState /> : <EmptyState />}
-      </div>
+      {isLoading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <Spinner color="default" size="lg" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {size(rows) > 0 ? <DataState /> : <EmptyState />}
+        </div>
+      )}
     </div>
   );
 };
