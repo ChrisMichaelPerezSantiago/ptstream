@@ -7,7 +7,7 @@ import {
   DropdownMenu,
 } from "@nextui-org/react";
 import { useSelector } from "react-redux";
-import { chain, compact, map, size, sortBy } from "lodash";
+import { map, sortBy } from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { RootState } from "../../redux/store";
