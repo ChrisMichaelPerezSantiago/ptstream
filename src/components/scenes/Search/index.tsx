@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Chip, useDisclosure } from "@nextui-org/react";
-import { map, size, update } from "lodash";
+import { map, size } from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { SearchTableContainer } from "../../TableContainer";

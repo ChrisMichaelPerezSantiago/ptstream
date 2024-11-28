@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { UniqueSerieSeason } from "src/types";
+import { UniqueSerieSeason } from "../../types";
 
 type SearchState = {
   seasonSelected: UniqueSerieSeason | null;
