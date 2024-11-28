@@ -11,7 +11,8 @@ const config: ForgeConfig = {
   packagerConfig: {
     name: 'ptstream',
     asar: true,
-    osxSign: {}
+    // If you are not signing, you can comment this out
+    // osxSign: {}
   },
   rebuildConfig: {},
   makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
@@ -49,20 +50,6 @@ const config: ForgeConfig = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
-  publishers: [
-    {
-      name: '@electron-forge/publisher-github',
-      config: {
-        repository: {
-          owner: 'ChrisMichaelPerezSantiago',
-          name: 'ptstream'
-        },
-        draft: true,
-        prerelease: false,
-        generateReleaseNotes: true
-      }
-    }
-  ]
 };
 
 export default config;
