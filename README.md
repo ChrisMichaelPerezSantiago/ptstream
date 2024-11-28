@@ -13,15 +13,13 @@ Project in progress ...
 - [x] `Node.js >= 18.x`
 - [x] `Yarn >= 1.x`
 
-## 📦 Installation
+# 📚 Documentation
 
 ```shell
 npm run start
 # or
 yarn start
 ```
-
-# 📚 Documentation
 
 ...
 
