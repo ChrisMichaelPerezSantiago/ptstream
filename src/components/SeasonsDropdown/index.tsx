@@ -112,6 +112,7 @@ export default function SeriesDropdown({
               )}`}
               startContent={
                 <User
+                  name={null}
                   avatarProps={{
                     radius: "lg",
                     src: `https://image.tmdb.org/t/p/w185${season.poster_path}`,
@@ -153,6 +154,7 @@ export default function SeriesDropdown({
                   )}`}
                   startContent={
                     <User
+                      name={null}
                       avatarProps={{
                         radius: "lg",
                         src: `https://image.tmdb.org/t/p/w185${
