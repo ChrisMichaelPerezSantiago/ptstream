@@ -11,7 +11,7 @@ import {
   Minimize2,
   Maximize2,
 } from "lucide-react";
-import { map, merge, range, toUpper } from "lodash";
+import { join, map, merge, range, toUpper } from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { PromoResult, PromoReturnType, UniqueMovie } from "../../types";
@@ -21,6 +21,7 @@ import useGetPromoById from "../../hooks/useGetPromoById";
 import PlyrVideoPlayer from "../PlyrVideoPlayer";
 import FavoriteButton from "../FavoriteButton";
 import { useFullscreen } from "../../hooks/useFullscreen";
+import SeoContainer from "../SeoContainer";
 
 type MovieSectionProps = {
   item: UniqueMovie;
@@ -110,8 +111,19 @@ const DefaultState = ({
 }: DefaultStateProps) => {
   const { t } = useTranslation();
 
+  const genreKeywords = join(
+    map(movie.genre_ids, (genreId) => t(`${genreId}`)),
+    ", "
+  );
+
   return (
     <div className="max-h-screen overflow-y-auto text-black dark:text-white">
+      <SeoContainer
+        title={movie.title}
+        description={movie.overview}
+        keywords={genreKeywords}
+      />
+
       {movie.backdrop_path ? (
         <Banner srcImg={movie.backdrop_path} alt={movie.title} />
       ) : null}

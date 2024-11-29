@@ -13,6 +13,7 @@ import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
 import { GENRE_RESET_FILTER } from "../../../constants";
 import useSeasonSelected from "../../../hooks/useSeasonSelected";
+import SeoContainer from "../../SeoContainer";
 
 const EmptyState = () => {
   const { t } = useTranslation();
@@ -35,6 +36,8 @@ export default function SerieScene() {
   const currentGenre = useSelector(
     (state: RootState) => state.genre.selectedGenre
   );
+
+  const { t } = useTranslation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -99,6 +102,8 @@ export default function SerieScene() {
 
   return (
     <Fragment>
+      <SeoContainer title={`${t("Navigation_Home")} - ${t("Series_Title")}`} />
+
       <SerieTableContainer
         isLoading={isLoading}
         rows={series}

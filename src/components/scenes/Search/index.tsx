@@ -10,6 +10,7 @@ import ScrollToTopButton from "../../../components/ScrollToTopButton";
 import useSearchHandler from "../../../hooks/useSearchHandler";
 import { MediaType } from "../../../types";
 import useSearchState from "../../../hooks/useSearchState";
+import SeoContainer from "../../../components/SeoContainer";
 
 const defaultSearchTerms = [
   "Harry Potter",
@@ -74,6 +75,8 @@ const SerieScene = () => {
   const searchState = useSearchState();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const { t } = useTranslation();
+
   const records = searchState.get("records");
   const record = searchState.get("record");
   const totalRecords = searchState.get("totalRecords");
@@ -102,6 +105,8 @@ const SerieScene = () => {
 
   return (
     <Fragment>
+      <SeoContainer title={`${t("Navigation_Search")}`} />
+
       <SearchTableContainer
         isLoading={isLoading}
         rows={records}
