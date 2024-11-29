@@ -12,7 +12,16 @@ import {
   Maximize2,
   Minimize2,
 } from "lucide-react";
-import { chain, defaultTo, get, map, merge, range, toUpper } from "lodash";
+import {
+  chain,
+  defaultTo,
+  get,
+  join,
+  map,
+  merge,
+  range,
+  toUpper,
+} from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { PromoResult, PromoReturnType, UniqueSerie } from "../../types";
@@ -26,6 +35,7 @@ import FavoriteButton from "../FavoriteButton";
 import ChapterWatchedButton from "../ChapterWatchedButton";
 import useSeasonSelected from "../../hooks/useSeasonSelected";
 import { useFullscreen } from "../../hooks/useFullscreen";
+import SeoContainer from "../SeoContainer";
 
 type SerieSectionProps = {
   item: UniqueSerie;
@@ -137,8 +147,19 @@ const ChapterState = ({
 }: ChapterStateProps) => {
   const { t } = useTranslation();
 
+  const genreKeywords = join(
+    map(serie.genre_ids, (genreId) => t(`${genreId}`)),
+    ", "
+  );
+
   return (
     <div className="max-h-screen overflow-y-auto text-black dark:text-white">
+      <SeoContainer
+        title={chapter.name}
+        description={serie.overview}
+        keywords={genreKeywords}
+      />
+
       <button
         onClick={onBack}
         className="flex items-center justify-center w-8 h-8 p-1 text-black transition-colors border rounded-full bg-gray-200/30 backdrop-blur-md border-gray-200/50 dark:bg-gray-800/30 dark:text-white dark:border-gray-800/50 hover:bg-gray-200/40 dark:hover:bg-gray-800/40"
@@ -243,8 +264,19 @@ const DefaultState = ({
     get(serie, "poster_path", null)
   );
 
+  const genreKeywords = join(
+    map(serie.genre_ids, (genreId) => t(`${genreId}`)),
+    ", "
+  );
+
   return (
     <div className="max-h-screen overflow-y-auto text-black dark:text-white">
+      <SeoContainer
+        title={serie.name}
+        description={serie.overview}
+        keywords={genreKeywords}
+      />
+
       {serie.backdrop_path ? (
         <Banner srcImg={serie.backdrop_path} alt={serie.name} />
       ) : null}

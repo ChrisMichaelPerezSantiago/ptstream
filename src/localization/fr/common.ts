@@ -1,4 +1,6 @@
 export default {
+  "Movies_Title": "Films",
+  "Series_Title": "Séries",
   "Navigation_Home": "Accueil",
   "Navigation_Search": "Rechercher",
   "Navigation_MyFavorites": "Mes Favoris",

@@ -12,6 +12,7 @@ import { MovieSection } from "../../Section";
 import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
 import { GENRE_RESET_FILTER } from "../../../constants";
+import SeoContainer from "../../SeoContainer";
 
 const EmptyState = () => {
   const { t } = useTranslation();
@@ -34,6 +35,8 @@ export default function MovieScene() {
   const currentGenre = useSelector(
     (state: RootState) => state.genre.selectedGenre
   );
+
+  const { t } = useTranslation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -92,6 +95,8 @@ export default function MovieScene() {
 
   return (
     <Fragment>
+      <SeoContainer title={`${t("Navigation_Home")} - ${t("Movies_Title")}`} />
+
       <MovieTableContainer
         isLoading={isLoading}
         rows={movies}

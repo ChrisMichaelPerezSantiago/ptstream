@@ -11,6 +11,7 @@ import * as MyFavLocalStorage from "../../../toolkit/MyFavLocalStorage";
 import { RootState } from "../../../redux/store";
 import ScrollToTopButton from "../../../components/ScrollToTopButton";
 import { MediaType } from "../../../types";
+import SeoContainer from "../../../components/SeoContainer";
 
 const DefaultState = () => {
   const { t } = useTranslation();
@@ -61,6 +62,8 @@ export default function MyFavoriteScene() {
   const [isLoading, setIsLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const { t } = useTranslation();
+
   const currentGenre = useSelector(
     (state: RootState) => state.genre.selectedGenre
   );
@@ -102,6 +105,8 @@ export default function MyFavoriteScene() {
 
   return (
     <Fragment>
+      <SeoContainer title={`${t("Navigation_MyFavorites")}`} />
+
       <MyFavoritesTableContainer
         isLoading={isLoading}
         rows={myFavorites}
