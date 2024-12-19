@@ -44,9 +44,10 @@ export const TableContainer = ({
             <Image
               alt={get(row, "name", null) || get(row, "title", null)}
               className="object-cover rounded-lg"
+              src={`https://image.tmdb.org/t/p/w185${get(row, "poster_path")}`}
+              fallbackSrc="https://via.placeholder.com/300x300"
               height={120}
               width={80}
-              src={`https://image.tmdb.org/t/p/w185${get(row, "poster_path")}`}
             />
             {/* Media Type Label Below Image */}
             <div className="mt-2 text-center">
