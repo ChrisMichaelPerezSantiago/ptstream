@@ -37,9 +37,10 @@ export const TableContainer = ({
           <Image
             alt={row.title}
             className="object-cover rounded-lg"
+            src={`https://image.tmdb.org/t/p/w185${row.poster_path}`}
+            fallbackSrc="https://via.placeholder.com/300x300"
             height={120}
             width={80}
-            src={`https://image.tmdb.org/t/p/w185${row.poster_path}`}
           />
           <div className="flex-1 ml-4">
             <p className="font-semibold text-gray-800 text-md">{row.title}</p>
