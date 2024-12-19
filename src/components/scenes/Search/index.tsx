@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Chip, useDisclosure } from "@nextui-org/react";
-import { map, size } from "lodash";
+import { chain, includes, map, size } from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { SearchTableContainer } from "../../TableContainer";
@@ -84,9 +84,16 @@ const SerieScene = () => {
 
   const showScrollToTop = size(records) >= 100;
 
+  const filterOutMediaTypes = (mediaTypes: string[], data: any) =>
+    chain(data)
+      .reject((item) => includes(mediaTypes, item.media_type))
+      .value();
+
   const { isLoading } = useSearchHandler(
     (data) => {
-      searchState.set("records", data.results);
+      const filteredResults = filterOutMediaTypes(["person"], data.results);
+
+      searchState.set("records", filteredResults);
       searchState.set("page", data.page);
       searchState.set("totalRecords", data.total_pages);
     },
