@@ -7,6 +7,8 @@ import searchReducer from './search/searchSlice';
 import inputSearchReducer from './inputSearch/inputSearchSlice';
 import seasonReducer from './season/seasonSlice';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const logger = createLogger({
   collapsed: true,
   duration: true,
@@ -21,7 +23,11 @@ export const store = configureStore({
     inputSearch: inputSearchReducer,
     season: seasonReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) =>
+    isDev
+      ? getDefaultMiddleware().concat(logger)
+      : getDefaultMiddleware(),
+  devTools: isDev
 });
 
 export type RootState = ReturnType<typeof store.getState>;
