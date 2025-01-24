@@ -61,36 +61,35 @@ const StreamingVideo = ({ movie: { id }, onBack }: StreamingVideoProps) => {
   const src = `https://vidsrc.pro/embed/movie/${id}`;
 
   return (
-    <div className="fixed inset-0 text-black bg-black dark:text-white">
-      <div className="absolute z-10 flex gap-2 top-4 right-4">
+    <div className="fixed inset-0 text-black bg-gradient-to-br from-black to-gray-900 dark:text-white">
+      <div className="flex absolute top-4 right-4 z-10 gap-3 p-4 rounded-2xl backdrop-blur-lg bg-black/20">
         <button
           onClick={onBack}
-          className="flex items-center justify-center w-8 h-8 p-1 text-white transition-colors border rounded-full bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20"
+          className="flex justify-center items-center w-10 h-10 text-white rounded-xl transition-all bg-white/10 hover:bg-white/20 hover:scale-105"
         >
-          <ArrowLeft className="w-4 h-4 text-white" />
+          <ArrowLeft className="w-5 h-5" />
         </button>
         <button
           onClick={() => toggleFullscreen()}
-          className="flex items-center justify-center w-8 h-8 p-1 text-white transition-colors border rounded-full bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20"
+          className="flex justify-center items-center w-10 h-10 text-white rounded-xl transition-all bg-white/10 hover:bg-white/20 hover:scale-105"
         >
           {isFullscreen ? (
-            <Minimize2 className="w-4 h-4 text-white" />
+            <Minimize2 className="w-5 h-5" />
           ) : (
-            <Maximize2 className="w-4 h-4 text-white" />
+            <Maximize2 className="w-5 h-5" />
           )}
         </button>
       </div>
 
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Spinner color="default" />
+        <div className="flex absolute inset-0 justify-center items-center backdrop-blur-sm bg-black/50">
+          <Spinner size="lg" className="w-12 h-12" />
         </div>
       )}
 
       <div
         className={`relative w-full h-full ${
-          isFloating ? "animate-iframe-drop-effect" : ""
-        }`}
+          isFloating ? "animate-iframe-drop-effect" : ""}`}
       >
         <iframe
           src={src}
@@ -117,7 +116,7 @@ const DefaultState = ({
   );
 
   return (
-    <div className="max-h-screen overflow-y-auto text-black dark:text-white">
+    <div className="overflow-y-auto max-h-screen text-black dark:text-white">
       <SeoContainer
         title={movie.title}
         description={movie.overview}
@@ -182,35 +181,35 @@ const DefaultState = ({
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
                 onClick={onWatchNow}
               >
-                <PlayCircle className="w-4 h-4 mr-2" />
+                <PlayCircle className="mr-2 w-4 h-4" />
                 {t("Movie_ChapterState_WatchNow")}
               </Button>
               <Button
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
                 onClick={onWatchPromo}
               >
-                <PlayCircle className="w-4 h-4 mr-2" />
+                <PlayCircle className="mr-2 w-4 h-4" />
                 {t("Movie_DefaultState_WatchPromo")}
               </Button>
             </div>
             <div className="grid grid-cols-2 gap-4 text-sm">
               {movie.release_date && (
                 <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-2" />
+                  <Calendar className="mr-2 w-4 h-4" />
                   {t("Movie_DefaultState_ReleaseDate")}:{" "}
                   {parseDate(movie.release_date)}
                 </div>
               )}
               {movie.original_language && (
                 <div className="flex items-center">
-                  <Globe className="w-4 h-4 mr-2" />
+                  <Globe className="mr-2 w-4 h-4" />
                   {t("Movie_DefaultState_Language")}:{" "}
                   {toUpper(movie.original_language)}
                 </div>
               )}
               {movie.popularity && (
                 <div className="flex items-center">
-                  <ThumbsUp className="w-4 h-4 mr-2" />
+                  <ThumbsUp className="mr-2 w-4 h-4" />
                   {t("Movie_DefaultState_Popularity")}:{" "}
                   {movie.popularity.toFixed(2)}
                 </div>
