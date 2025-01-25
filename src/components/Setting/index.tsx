@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Effect, pipe } from "effect";
 import {
   Dropdown,
   DropdownTrigger,
@@ -16,13 +17,13 @@ export default function Setting() {
   const { t } = useTranslation();
   const [selectedLang, setSelectedLang] = useState(i18n.language);
 
-  const handleChangeLanguage = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const newLang = event.target.value;
-    i18n.changeLanguage(newLang);
-    setSelectedLang(newLang);
-  };
+  const handleChangeLanguage = (event: React.ChangeEvent<HTMLSelectElement>) =>
+    pipe(
+      Effect.sync(() => event.target.value),
+      Effect.tap((newLang) => Effect.sync(() => i18n.changeLanguage(newLang))),
+      Effect.tap((newLang) => Effect.sync(() => setSelectedLang(newLang))),
+      Effect.runSync
+    );
 
   return (
     <Dropdown
