@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Effect, pipe } from "effect";
 import { Eye, EyeOff } from "lucide-react";
 import { Tooltip } from "@nextui-org/react";
 import { motion } from "framer-motion";
@@ -16,30 +17,40 @@ type ChapterWatchedButtonProps = {
 
 const ChapterWatchedButton = ({ item }: ChapterWatchedButtonProps) => {
   const { t } = useTranslation();
-
   const [isWatched, setIsWatched] = useState(false);
 
   // Generate a unique key based on serieId, seasonId, and episodeId
   const chapterKey = `${item.serieId}_${item.seasonId}_${item.episodeId}`;
 
+  // Check if the chapter is already watched when the component mounts
   useEffect(() => {
-    // Check if the chapter is already watched when the component mounts
-    setIsWatched(ChaptersWatchedLocalStorage.wasChapterSeen(item));
+    pipe(
+      Effect.sync(() => ChaptersWatchedLocalStorage.wasChapterSeen(item)),
+      Effect.tap((watched) => Effect.sync(() => setIsWatched(watched))),
+      Effect.runSync
+    );
   }, [chapterKey]);
 
-  const toggleWatched = () => {
-    if (isWatched) {
-      ChaptersWatchedLocalStorage.removeChapterWatchedItem(item);
-    } else {
-      ChaptersWatchedLocalStorage.addChapterWatchedItem(item);
-    }
-    setIsWatched(!isWatched);
-  };
+  const toggleWatched = () =>
+    pipe(
+      Effect.sync(() => isWatched),
+      Effect.tap((watched) =>
+        Effect.sync(() => {
+          if (watched) {
+            ChaptersWatchedLocalStorage.removeChapterWatchedItem(item);
+          } else {
+            ChaptersWatchedLocalStorage.addChapterWatchedItem(item);
+          }
+        })
+      ),
+      Effect.tap(() => Effect.sync(() => setIsWatched(!isWatched))),
+      Effect.runSync
+    );
 
   return (
     <motion.button
       className={`fixed z-50 bottom-4 right-14 p-2 rounded-full ${
-        isWatched ? "border-green-500 bg-white" : "border-black bg-white"
+        isWatched ? "bg-white border-green-500" : "bg-white border-black"
       } shadow-lg transition-colors duration-500 focus:outline-none`}
       onClick={toggleWatched}
       initial={{ scale: 1 }}
