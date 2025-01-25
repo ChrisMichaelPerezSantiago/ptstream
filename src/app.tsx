@@ -10,6 +10,7 @@ import { createRoot } from "react-dom/client";
 import { NextUIProvider, Switch } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 import { I18nextProvider } from "react-i18next";
+import { Effect, pipe } from "effect";
 
 import Root from "./scenes/root";
 import TvIcon from "./components/Icons/TvIcon";
@@ -51,13 +52,28 @@ function App() {
     (state: RootState) => state.genre.selectedGenre
   );
 
-  const reset = () => {
+  const reset = Effect.sync(() => {
     dispatch(setGenre(null));
+  });
+
+  const switchScene = (scene: Scene) =>
+    pipe(
+      Effect.sync(() => dispatch(setScene(scene))),
+      Effect.tap(() => reset)
+    );
+
+  const handleGenreChange = (genre: number | null) =>
+    Effect.sync(() => dispatch(setGenre(genre)));
+
+  const handleSceneSwitch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    pipe(
+      Effect.sync(() => (e.target.checked ? "movies" : ("series" as Scene))),
+      Effect.flatMap(switchScene),
+      Effect.runSync
+    );
   };
 
   const SceneIcon = scenes[currentScene].icon;
-  const switchScene = (scene: Scene) => dispatch(setScene(scene));
-  const handleGenreChange = (genre: number | null) => dispatch(setGenre(genre));
 
   return (
     <div
@@ -67,26 +83,24 @@ function App() {
           : "bg-white text-gray-900"
       }`}
     >
-      {/* Common header wrapping NavBar and the switches */}
-      <header className="flex items-center justify-between p-4">
+      <header className="flex justify-between items-center p-4">
         <NavBar />
-        <div className="flex items-center gap-4">
+        <div className="flex gap-4 items-center">
           {location.pathname === "/" ? (
             <Switch
               defaultChecked={currentScene === "series"}
               size="md"
               color="default"
-              onChange={(e) => {
-                switchScene(e.target.checked ? "movies" : "series");
-                reset();
-              }}
+              onChange={handleSceneSwitch}
               thumbIcon={({ className }) => <SceneIcon className={className} />}
             />
           ) : null}
           {location.pathname !== "/search" ? (
             <GenreSelector
               selectedGenre={selectedGenre}
-              onGenreChange={handleGenreChange}
+              onGenreChange={(genre) => {
+                Effect.runSync(handleGenreChange(genre));
+              }}
             />
           ) : null}
           <div className="ml-10">
