@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { GithubIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Effect, pipe } from "effect";
 
 export function Footer() {
   const { t } = useTranslation();
@@ -9,7 +10,11 @@ export function Footer() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    setIsVisible(true);
+    pipe(
+      Effect.sync(() => true),
+      Effect.tap((value) => Effect.sync(() => setIsVisible(value))),
+      Effect.runSync
+    );
   }, []);
 
   return (
@@ -23,7 +28,7 @@ export function Footer() {
         z-50 // Ensure the footer is above other content
       `}
     >
-      <div className="container flex items-center justify-between mx-auto">
+      <div className="container flex justify-between items-center mx-auto">
         <p className="text-sm text-gray-700">
           &copy; {currentYear} {t("Copyright")}
         </p>
