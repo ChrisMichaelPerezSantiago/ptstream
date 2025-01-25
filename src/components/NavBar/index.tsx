@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { House, Search, Heart } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
+import { Effect, pipe } from "effect";
 
 import useSearchState from "../../hooks/useSearchState";
 
@@ -34,13 +35,20 @@ export default function NavBar() {
   const searchState = useSearchState();
 
   useEffect(() => {
-    navigate(NAVIGATION_MAP[selected]);
-  }, [selected]);
+    pipe(
+      Effect.sync(() => NAVIGATION_MAP[selected]),
+      Effect.tap((path) => Effect.sync(() => navigate(path))),
+      Effect.runSync
+    );
+  }, [selected, navigate]);
 
-  const handleSelectionChange = (key: Key) => {
-    setSelected(key);
-    searchState.clear();
-  };
+  const handleSelectionChange = (key: Key) =>
+    pipe(
+      Effect.sync(() => key),
+      Effect.tap((k) => Effect.sync(() => setSelected(k))),
+      Effect.tap(() => Effect.sync(() => searchState.clear())),
+      Effect.runSync
+    );
 
   return (
     <div className="flex flex-col w-full">
