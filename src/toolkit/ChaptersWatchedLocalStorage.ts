@@ -17,7 +17,6 @@ const getChaptersWatchedItems = () => {
     },
     catch: (error: Error) => {
       console.error('[LocalStorage/getChaptersWatchedItems] Error: ', error);
-      return [];
     },
   }).pipe(Effect.runSync);
 };
@@ -91,7 +90,6 @@ const getAllChaptersWatchedItems = () => {
     },
     catch: (error: Error) => {
       console.error('[LocalStorage/getAllChaptersWatchedItems] Error: ', error);
-      return [];
     },
   }).pipe(Effect.runSync);
 };

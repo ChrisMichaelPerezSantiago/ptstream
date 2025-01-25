@@ -93,36 +93,35 @@ const StreamingVideo = ({
   const src = `https://vidsrc.pro/embed/tv/${serieId}/${seasonId}/${episodeId}`;
 
   return (
-    <div className="fixed inset-0 text-black bg-black dark:text-white">
-      <div className="absolute z-10 flex gap-2 top-4 right-4">
+    <div className="fixed inset-0 text-black bg-gradient-to-br from-black to-gray-900 dark:text-white">
+      <div className="flex absolute top-4 right-4 z-10 gap-3 p-4 rounded-2xl backdrop-blur-lg bg-black/20">
         <button
           onClick={onBack}
-          className="flex items-center justify-center w-8 h-8 p-1 text-white transition-colors border rounded-full bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20"
+          className="flex justify-center items-center w-10 h-10 text-white rounded-xl transition-all bg-white/10 hover:bg-white/20 hover:scale-105"
         >
-          <ArrowLeft className="w-4 h-4 text-white" />
+          <ArrowLeft className="w-5 h-5" />
         </button>
         <button
           onClick={() => toggleFullscreen()}
-          className="flex items-center justify-center w-8 h-8 p-1 text-white transition-colors border rounded-full bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20"
+          className="flex justify-center items-center w-10 h-10 text-white rounded-xl transition-all bg-white/10 hover:bg-white/20 hover:scale-105"
         >
           {isFullscreen ? (
-            <Minimize2 className="w-4 h-4 text-white" />
+            <Minimize2 className="w-5 h-5" />
           ) : (
-            <Maximize2 className="w-4 h-4 text-white" />
+            <Maximize2 className="w-5 h-5" />
           )}
         </button>
       </div>
 
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Spinner color="default" />
+        <div className="flex absolute inset-0 justify-center items-center backdrop-blur-sm bg-black/50">
+          <Spinner size="lg" className="w-12 h-12" />
         </div>
       )}
 
       <div
         className={`relative w-full h-full ${
-          isFloating ? "animate-iframe-drop-effect" : ""
-        }`}
+          isFloating ? "animate-iframe-drop-effect" : ""}`}
       >
         <iframe
           src={src}
@@ -153,7 +152,7 @@ const ChapterState = ({
   );
 
   return (
-    <div className="max-h-screen overflow-y-auto text-black dark:text-white">
+    <div className="overflow-y-auto max-h-screen text-black dark:text-white">
       <SeoContainer
         title={chapter.name}
         description={serie.overview}
@@ -162,7 +161,7 @@ const ChapterState = ({
 
       <button
         onClick={onBack}
-        className="flex items-center justify-center w-8 h-8 p-1 text-black transition-colors border rounded-full bg-gray-200/30 backdrop-blur-md border-gray-200/50 dark:bg-gray-800/30 dark:text-white dark:border-gray-800/50 hover:bg-gray-200/40 dark:hover:bg-gray-800/40"
+        className="flex justify-center items-center p-1 w-8 h-8 text-black rounded-full border backdrop-blur-md transition-colors bg-gray-200/30 border-gray-200/50 dark:bg-gray-800/30 dark:text-white dark:border-gray-800/50 hover:bg-gray-200/40 dark:hover:bg-gray-800/40"
       >
         <ArrowLeft className="w-4 h-4 text-black dark:text-white" />
       </button>
@@ -218,7 +217,7 @@ const ChapterState = ({
                   className="bg-primary text-primary-foreground hover:bg-primary/90"
                   onClick={onWatchNow}
                 >
-                  <PlayCircle className="w-4 h-4 mr-2" />
+                  <PlayCircle className="mr-2 w-4 h-4" />
                   {t("Serie_ChapterState_WatchNow")}
                 </Button>
               </div>
@@ -226,14 +225,14 @@ const ChapterState = ({
             <div className="grid grid-cols-2 gap-4 text-sm">
               {chapter.air_date && (
                 <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-2" />
+                  <Calendar className="mr-2 w-4 h-4" />
                   {t("Serie_ChapterState_AirDate")}:{" "}
                   {parseDate(chapter.air_date)}
                 </div>
               )}
               {chapter.runtime && (
                 <div className="flex items-center">
-                  <Clock className="w-4 h-4 mr-2" />
+                  <Clock className="mr-2 w-4 h-4" />
                   {t("Serie_ChapterState_Runtime")}:{" "}
                   {formatRuntime(chapter.runtime)}
                 </div>
@@ -270,7 +269,7 @@ const DefaultState = ({
   );
 
   return (
-    <div className="max-h-screen overflow-y-auto text-black dark:text-white">
+    <div className="overflow-y-auto max-h-screen text-black dark:text-white">
       <SeoContainer
         title={serie.name}
         description={serie.overview}
@@ -335,7 +334,7 @@ const DefaultState = ({
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
                 onClick={onWatchNow}
               >
-                <PlayCircle className="w-4 h-4 mr-2" />
+                <PlayCircle className="mr-2 w-4 h-4" />
                 {t("Serie_DefaultState_WatchPromo")}
               </Button>
               <SeriesDropdown id={serie.id} watchChapter={watchChapter} />
@@ -343,21 +342,21 @@ const DefaultState = ({
             <div className="grid grid-cols-2 gap-4 text-sm">
               {serie.first_air_date && (
                 <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-2" />
+                  <Calendar className="mr-2 w-4 h-4" />
                   {t("Serie_DefaultState_FirstAirDate")}:{" "}
                   {parseDate(serie.first_air_date)}
                 </div>
               )}
               {serie.original_language && (
                 <div className="flex items-center">
-                  <Globe className="w-4 h-4 mr-2" />
+                  <Globe className="mr-2 w-4 h-4" />
                   {t("Serie_DefaultState_Language")}:{" "}
                   {toUpper(serie.original_language)}
                 </div>
               )}
               {serie.popularity && (
                 <div className="flex items-center">
-                  <ThumbsUp className="w-4 h-4 mr-2" />
+                  <ThumbsUp className="mr-2 w-4 h-4" />
                   {t("Serie_DefaultState_Popularity")}:{" "}
                   {serie.popularity.toFixed(2)}
                 </div>

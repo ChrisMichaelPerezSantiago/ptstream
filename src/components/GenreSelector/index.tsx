@@ -9,6 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import { map, sortBy } from "lodash";
 import { useTranslation } from "react-i18next";
+import { Effect, pipe } from "effect";
 
 import { RootState } from "../../redux/store";
 import { VerticalDotsIcon } from "../Icons/VerticalDotsIcon";
@@ -27,24 +28,42 @@ const GenreSelector: React.FC<GenreSelectorProps> = React.memo(
       (state: RootState) => state.scene.currentScene
     );
 
-    const genresObject =
-      currentScene === "series" ? tvSeriesGenres : moviesGenres;
-    const genresArray = Object.entries(genresObject);
-    const reorderedGenres = sortBy(genresArray, ([id]) => (id === "0" ? 1 : 0));
+    const getGenres = pipe(
+      Effect.sync(() =>
+        currentScene === "series" ? tvSeriesGenres : moviesGenres
+      ),
+      Effect.map((genres) => Object.entries(genres)),
+      Effect.map((entries) => sortBy(entries, ([id]) => (id === "0" ? 1 : 0))),
+      Effect.runSync
+    );
 
-    const selectedKeys = useMemo(() => {
-      return selectedGenre ? map([selectedGenre], (key) => key.toString()) : [];
-    }, [selectedGenre]);
+    const selectedKeys = useMemo(
+      () =>
+        pipe(
+          Effect.sync(() => selectedGenre),
+          Effect.map((genre) =>
+            genre ? map([genre], (key) => key.toString()) : []
+          ),
+          Effect.runSync
+        ),
+      [selectedGenre]
+    );
 
     const handleGenreChange = useCallback(
-      (key: string | null) => {
-        onGenreChange(key ? Number(key) : null);
-      },
+      (key: string | null) =>
+        pipe(
+          Effect.sync(() => key),
+          Effect.map((k) => (k ? Number(k) : null)),
+          Effect.tap((genre) => Effect.sync(() => onGenreChange(genre))),
+          Effect.runSync
+        ),
       [onGenreChange]
     );
 
+    const reorderedGenres = getGenres;
+
     return (
-      <div className="w-full max-w-xs mx-auto">
+      <div className="mx-auto w-full max-w-xs">
         <Dropdown>
           <DropdownTrigger>
             <Button

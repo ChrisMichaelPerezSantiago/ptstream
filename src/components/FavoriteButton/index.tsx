@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Effect, pipe } from "effect";
 import { Heart, HeartCrack } from "lucide-react";
 import { motion } from "framer-motion";
 import * as MyFavLocalStorage from "../../toolkit/MyFavLocalStorage";
@@ -10,23 +11,35 @@ type FavoriteButtonProps = {
 const FavoriteButton = ({ item }: FavoriteButtonProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
+  // Check if the item is already liked when the component mounts
   useEffect(() => {
-    // Check if the item is already liked when the component mounts
-    setIsFavorite(MyFavLocalStorage.isItemLiked(item.id));
+    pipe(
+      Effect.sync(() => MyFavLocalStorage.isItemLiked(item.id)),
+      Effect.tap((liked) => Effect.sync(() => setIsFavorite(liked))),
+      Effect.runSync
+    );
   }, [item.id]);
 
-  const toggleFavorite = () => {
-    if (isFavorite) {
-      MyFavLocalStorage.removeLikedItem(item.id);
-    } else {
-      MyFavLocalStorage.addLikedItem(item);
-    }
-    setIsFavorite(!isFavorite);
-  };
+  const toggleFavorite = () =>
+    pipe(
+      Effect.sync(() => isFavorite),
+      Effect.tap((favorite) =>
+        Effect.sync(() => {
+          if (favorite) {
+            MyFavLocalStorage.removeLikedItem(item.id);
+          } else {
+            MyFavLocalStorage.addLikedItem(item);
+          }
+        })
+      ),
+      Effect.tap(() => Effect.sync(() => setIsFavorite(!isFavorite))),
+      Effect.runSync
+    );
+
   return (
     <motion.button
       className={`fixed z-50 bottom-4 right-4 p-2 rounded-full ${
-        isFavorite ? "border-red-500 bg-white" : "border-black bg-white"
+        isFavorite ? "bg-white border-red-500" : "bg-white border-black"
       } shadow-lg transition-colors duration-500 focus:outline-none`}
       onClick={toggleFavorite}
       initial={{ scale: 1 }}

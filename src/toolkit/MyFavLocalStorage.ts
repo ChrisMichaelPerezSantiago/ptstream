@@ -84,7 +84,6 @@ const getAllLikedItems = () => {
     },
     catch: (error: Error) => {
       console.error('[LocalStorage/getAllLikedItems] Error: ', error);
-      return [];
     },
   }).pipe(Effect.runSync);
 };
