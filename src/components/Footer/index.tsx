@@ -33,7 +33,7 @@ export function Footer() {
           &copy; {currentYear} {t("Copyright")}
         </p>
         <a
-          href={"https://github.com/ChrisMichaelPerezSantiago/ptstream"}
+          href={"https://github.com/chrismichaelps/ptstream"}
           target="_blank"
           rel="noopener noreferrer"
           className="text-gray-700 transition-colors hover:text-gray-900 group"
